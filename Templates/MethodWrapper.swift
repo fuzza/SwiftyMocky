@@ -44,9 +44,6 @@ class MethodWrapper {
     private func deprecatedMessage(_ preferred: String = "") -> String {
         return "@available(*, deprecated, message: \"This constructor is deprecated, and will be removed in v3.1\(preferred)\")\n\t\t"
     }
-    private var noStubDefinedMessage: String {
-        return "Stub return value not specified for \(method.name.replacingOccurrences(of: "\t", with: " ")). Use given"
-    }
     private static var registered: [String: Int] = [:]
     private static var suffixes: [String: Int] = [:]
     private static var suffixesWithoutReturnType: [String: Int] = [:]
@@ -144,65 +141,6 @@ class MethodWrapper {
         } else {
             return "\(staticModifier)func \(method.shortName)\(params) \(throwing)-> \(method.returnTypeName.name) "
         }
-    }
-    var invocation: String {
-        guard !method.isInitializer else { return "" }
-        if method.parameters.isEmpty {
-            return "registry.addInvocation(.\(prototype))"
-        } else {
-            return "registry.addInvocation(.\(prototype)(\(parametersForMethodCall())))"
-        }
-    }
-    var givenValue: String {
-        guard !method.isInitializer else { return "" }
-        guard method.throws || !method.returnTypeName.isVoid else { return "" }
-
-        let methodType = method.parameters.isEmpty ? ".\(prototype)" : ".\(prototype)(\(parametersForMethodCall()))"
-        let returnType: String = returnsSelf ? "__Self__" : "\(TypeWrapper(method.returnTypeName).stripped)"
-
-        if method.returnTypeName.isVoid {
-            return """
-            \n\t\tdo {
-            \t\t    _ = try registry.methodReturnValue(\(methodType)).casted() as Void
-            \t\t}\(" ")
-            """
-        } else {
-            let defaultValue = method.returnTypeName.isOptional ? " = nil" : ""
-            return """
-            \n\t\tvar __value: \(returnType)\(defaultValue)
-            \t\tdo {
-            \t\t    __value = try registry.methodReturnValue(\(methodType)).casted()
-            \t\t}\(" ")
-            """
-        }
-    }
-    var throwValue: String {
-        guard !method.isInitializer else { return "" }
-        guard method.throws || !method.returnTypeName.isVoid else { return "" }
-        let safeFailure = method.isStatic ? "" : "\t\t\tregistry.onFatalFailure(\"\(noStubDefinedMessage)\")\n"
-        // For Void and Returning optionals - we allow not stubbed case to happen, as we are still able to return
-        let noStubHandling = method.returnTypeName.isVoid || method.returnTypeName.isOptional ? "\t\t\t// do nothing" : "\(safeFailure)\t\t\tFailure(\"\(noStubDefinedMessage)\")"
-        guard method.throws else {
-            return """
-            catch {
-            \(noStubHandling)
-            \t\t}
-            """
-        }
-
-        return """
-        catch MockError.notStubed {
-        \(noStubHandling)
-        \t\t} catch {
-        \t\t    throw error
-        \t\t}
-        """
-    }
-    var returnValue: String {
-        guard !method.isInitializer else { return "" }
-        guard !method.returnTypeName.isVoid else { return "" }
-
-        return "\n\t\treturn __value"
     }
     var equalCase: String {
         guard !method.isInitializer else { return "" }
