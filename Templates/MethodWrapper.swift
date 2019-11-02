@@ -236,12 +236,14 @@ class MethodWrapper {
     // Stub
     func stubBody() -> String {
         let body: String = {
-            if method.isInitializer || !returnsSelf {
-                return invokeBody()
-            } else {
+            guard !method.isInitializer else { return "" }
+            
+            if returnsSelf {
                 return wrappedStubPrefix()
                     + "\t\t" + invokeBody()
                     + wrappedStubPostfix()
+            } else {
+                return invokeBody()
             }
         }()
         return replacingSelf(body)
