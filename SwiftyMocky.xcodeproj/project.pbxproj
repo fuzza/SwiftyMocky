@@ -18,6 +18,7 @@
 		6C3186F222DF67D800746DCC /* ProtocolWithGenericConstraintsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3186F122DF67D800746DCC /* ProtocolWithGenericConstraintsTests.swift */; };
 		6C3186F322DF67D800746DCC /* ProtocolWithGenericConstraintsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3186F122DF67D800746DCC /* ProtocolWithGenericConstraintsTests.swift */; };
 		6C3186F422DF67D800746DCC /* ProtocolWithGenericConstraintsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3186F122DF67D800746DCC /* ProtocolWithGenericConstraintsTests.swift */; };
+		6FD06F60236C9BDA00D9E03E /* MockRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD06F5F236C9BDA00D9E03E /* MockRegistry.swift */; };
 		7C10E4406673B3B3B7474E2C /* Pods_Mocky_Tests_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94B5EFCCD4E35E7C80D1E560 /* Pods_Mocky_Tests_macOS.framework */; };
 		AD487E872180A3CA005B74ED /* Count.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD487E862180A3CA005B74ED /* Count.swift */; };
 		BB4F9E470E0BD27A959C97EB /* Pods_Mocky_Tests_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9592625386F952AE07781D57 /* Pods_Mocky_Tests_iOS.framework */; };
@@ -249,6 +250,7 @@
 		68242AA122A7EBD300E36BCD /* MockyAssert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockyAssert.swift; sourceTree = "<group>"; };
 		6C3186EC22DF613C00746DCC /* ProtocolWithGenericConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolWithGenericConstraints.swift; sourceTree = "<group>"; };
 		6C3186F122DF67D800746DCC /* ProtocolWithGenericConstraintsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolWithGenericConstraintsTests.swift; sourceTree = "<group>"; };
+		6FD06F5F236C9BDA00D9E03E /* MockRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRegistry.swift; sourceTree = "<group>"; };
 		7194340B3CD91B825FCB78FB /* Pods-Mocky_Example_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mocky_Example_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mocky_Example_iOS/Pods-Mocky_Example_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		7A9B02B1C24E9AC79ABF999C /* Pods-Mocky_Example_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mocky_Example_iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mocky_Example_iOS/Pods-Mocky_Example_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		8DDEF4635180A969B16362F7 /* Pods-Mocky_Tests_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mocky_Tests_iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mocky_Tests_iOS/Pods-Mocky_Tests_iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -657,6 +659,7 @@
 				CC491A1A1FD9A33F001CAB8A /* Countable.swift */,
 				CCB026A71FB4F38F00ACA9F0 /* GenericAttribute.swift */,
 				68242AA122A7EBD300E36BCD /* MockyAssert.swift */,
+				6FD06F5F236C9BDA00D9E03E /* MockRegistry.swift */,
 			);
 			name = Classes;
 			path = Sources/Classes;
@@ -1646,6 +1649,7 @@
 			files = (
 				CCAFCA061FAF24EB003F776A /* Mock+Assertions.swift in Sources */,
 				CCAFCA021FAF24EB003F776A /* Parameter.swift in Sources */,
+				6FD06F60236C9BDA00D9E03E /* MockRegistry.swift in Sources */,
 				CCAFCA051FAF24EB003F776A /* Matcher.swift in Sources */,
 				CCC5CAD42161180D00D29291 /* SwiftyMockyTestObserver.swift in Sources */,
 				AD487E872180A3CA005B74ED /* Count.swift in Sources */,

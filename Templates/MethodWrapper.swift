@@ -148,9 +148,9 @@ class MethodWrapper {
     var invocation: String {
         guard !method.isInitializer else { return "" }
         if method.parameters.isEmpty {
-            return "addInvocation(.\(prototype))"
+            return "registry.addInvocation(.\(prototype))"
         } else {
-            return "addInvocation(.\(prototype)(\(parametersForMethodCall())))"
+            return "registry.addInvocation(.\(prototype)(\(parametersForMethodCall())))"
         }
     }
     var givenValue: String {
@@ -163,7 +163,7 @@ class MethodWrapper {
         if method.returnTypeName.isVoid {
             return """
             \n\t\tdo {
-            \t\t    _ = try methodReturnValue(\(methodType)).casted() as Void
+            \t\t    _ = try registry.methodReturnValue(\(methodType)).casted() as Void
             \t\t}\(" ")
             """
         } else {
@@ -171,7 +171,7 @@ class MethodWrapper {
             return """
             \n\t\tvar __value: \(returnType)\(defaultValue)
             \t\tdo {
-            \t\t    __value = try methodReturnValue(\(methodType)).casted()
+            \t\t    __value = try registry.methodReturnValue(\(methodType)).casted()
             \t\t}\(" ")
             """
         }
@@ -179,7 +179,7 @@ class MethodWrapper {
     var throwValue: String {
         guard !method.isInitializer else { return "" }
         guard method.throws || !method.returnTypeName.isVoid else { return "" }
-        let safeFailure = method.isStatic ? "" : "\t\t\tonFatalFailure(\"\(noStubDefinedMessage)\")\n"
+        let safeFailure = method.isStatic ? "" : "\t\t\tregistry.onFatalFailure(\"\(noStubDefinedMessage)\")\n"
         // For Void and Returning optionals - we allow not stubbed case to happen, as we are still able to return
         let noStubHandling = method.returnTypeName.isVoid || method.returnTypeName.isOptional ? "\t\t\t// do nothing" : "\(safeFailure)\t\t\tFailure(\"\(noStubDefinedMessage)\")"
         guard method.throws else {
@@ -519,7 +519,7 @@ class MethodWrapper {
         let type = performProxyClosureType()
         var proxy = method.parameters.isEmpty ? "\(prototype)" : "\(prototype)(\(parametersForMethodCall()))"
 
-        let cast = "let perform = methodPerformValue(.\(proxy)) as? \(type)"
+        let cast = "let perform = registry.methodPerformValue(.\(proxy)) as? \(type)"
         let call = performProxyClosureCall()
 
         return "\n\t\t\(cast)\n\t\t\(call)"

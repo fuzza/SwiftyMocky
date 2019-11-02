@@ -10,8 +10,8 @@ class VariableWrapper {
 
     var getter: String {
         let staticModifier = variable.isStatic ? "\(scope)." : ""
-        let returnValue = variable.isOptional ? "optionalGivenGetterValue(.\(propertyCaseGetName), \"\(noStubDefinedMessage)\")" : "givenGetterValue(.\(propertyCaseGetName), \"\(noStubDefinedMessage)\")"
-        return "\n\t\tget {\t\(staticModifier)invocations.append(.\(propertyCaseGetName)); return \(staticModifier)\(privatePrototypeName) ?? \(returnValue) }"
+        let returnValue = variable.isOptional ? "registry.optionalGivenGetterValue(.\(propertyCaseGetName), \"\(noStubDefinedMessage)\")" : "registry.givenGetterValue(.\(propertyCaseGetName), \"\(noStubDefinedMessage)\")"
+        return "\n\t\tget {\t\(staticModifier)registry.addInvocation(.\(propertyCaseGetName)); return \(staticModifier)\(privatePrototypeName) ?? \(returnValue) }"
     }
     var setter: String {
         let staticModifier = variable.isStatic ? "\(scope)." : ""
@@ -19,7 +19,7 @@ class VariableWrapper {
             let annotation = readonly ? "\n\t\t@available(*, deprecated, message: \"\(deprecatedMessage)\")" : ""
             return "\(annotation)\n\t\tset {\t\(variable.isStatic ? "\(scope)." : "")\(privatePrototypeName) = newValue }"
         } else {
-            return "\n\t\tset {\t\(staticModifier)invocations.append(.\(propertyCaseSetName)(.value(newValue))); \(variable.isStatic ? "\(scope)." : "")\(privatePrototypeName) = newValue }"
+            return "\n\t\tset {\t\(staticModifier)registry.addInvocation(.\(propertyCaseSetName)(.value(newValue))); \(variable.isStatic ? "\(scope)." : "")\(privatePrototypeName) = newValue }"
         }
     }
     var prototype: String {

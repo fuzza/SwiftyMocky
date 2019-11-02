@@ -14,23 +14,27 @@ import XCTest
 // sourcery: mock = "ItemsRepository"
 class ItemsRepositoryMock: ItemsRepository, Mock {
 // sourcery:inline:auto:ItemsRepositoryMock.autoMocked
-    var matcher: Matcher = Matcher.default
-    var stubbingPolicy: StubbingPolicy = .wrap
-    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    private var file: StaticString?
-    private var line: UInt?
-
+    private let registry = MockRegistry<MethodType, Given, Verify, Perform>()
+    var matcher: Matcher {
+        get { return registry.matcher }
+        set { registry.matcher = newValue }
+    }
+    var stubbingPolicy: StubbingPolicy {
+        get { return registry.stubbingPolicy }
+        set { registry.stubbingPolicy = newValue }
+    }
+    var sequencingPolicy: SequencingPolicy {
+        get { return registry.sequencingPolicy }
+        set { registry.sequencingPolicy = newValue }
+    }
+    
     public typealias PropertyStub = Given
     public typealias MethodStub = Given
     public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
-        self.file = file
-        self.line = line
+        registry.setupMock(file: file, line: line)
     }
 
 
@@ -39,24 +43,24 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
 
 
     open func storeItems(items: [Item]) {
-        addInvocation(.m_storeItems__items_items(Parameter<[Item]>.value(`items`)))
-		let perform = methodPerformValue(.m_storeItems__items_items(Parameter<[Item]>.value(`items`))) as? ([Item]) -> Void
+        registry.addInvocation(.m_storeItems__items_items(Parameter<[Item]>.value(`items`)))
+		let perform = registry.methodPerformValue(.m_storeItems__items_items(Parameter<[Item]>.value(`items`))) as? ([Item]) -> Void
 		perform?(`items`)
     }
 
     open func storeDetails(details: ItemDetails) {
-        addInvocation(.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`)))
-		let perform = methodPerformValue(.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`))) as? (ItemDetails) -> Void
+        registry.addInvocation(.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`)))
+		let perform = registry.methodPerformValue(.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`))) as? (ItemDetails) -> Void
 		perform?(`details`)
     }
 
     open func storedItems() -> [Item]? {
-        addInvocation(.m_storedItems)
-		let perform = methodPerformValue(.m_storedItems) as? () -> Void
+        registry.addInvocation(.m_storedItems)
+		let perform = registry.methodPerformValue(.m_storedItems) as? () -> Void
 		perform?()
 		var __value: [Item]? = nil
 		do {
-		    __value = try methodReturnValue(.m_storedItems).casted()
+		    __value = try registry.methodReturnValue(.m_storedItems).casted()
 		} catch {
 			// do nothing
 		}
@@ -64,12 +68,12 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
     }
 
     open func storedDetails(item: Item) -> ItemDetails? {
-        addInvocation(.m_storedDetails__item_item(Parameter<Item>.value(`item`)))
-		let perform = methodPerformValue(.m_storedDetails__item_item(Parameter<Item>.value(`item`))) as? (Item) -> Void
+        registry.addInvocation(.m_storedDetails__item_item(Parameter<Item>.value(`item`)))
+		let perform = registry.methodPerformValue(.m_storedDetails__item_item(Parameter<Item>.value(`item`))) as? (Item) -> Void
 		perform?(`item`)
 		var __value: ItemDetails? = nil
 		do {
-		    __value = try methodReturnValue(.m_storedDetails__item_item(Parameter<Item>.value(`item`))).casted()
+		    __value = try registry.methodReturnValue(.m_storedDetails__item_item(Parameter<Item>.value(`item`))).casted()
 		} catch {
 			// do nothing
 		}
@@ -77,13 +81,13 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
     }
 
 
-    fileprivate enum MethodType {
+    public enum MethodType: MethodTypeProtocol {
         case m_storeItems__items_items(Parameter<[Item]>)
         case m_storeDetails__details_details(Parameter<ItemDetails>)
         case m_storedItems
         case m_storedDetails__item_item(Parameter<Item>)
 
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+        public static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
             case (.m_storeItems__items_items(let lhsItems), .m_storeItems__items_items(let rhsItems)):
                 guard Parameter.compare(lhs: lhsItems, rhs: rhsItems, with: matcher) else { return false } 
@@ -100,7 +104,7 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
             }
         }
 
-        func intValue() -> Int {
+        public func intValue() -> Int {
             switch self {
             case let .m_storeItems__items_items(p0): return p0.intValue
             case let .m_storeDetails__details_details(p0): return p0.intValue
@@ -110,8 +114,8 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
         }
     }
 
-    open class Given: StubbedMethod {
-        fileprivate var method: MethodType
+    open class Given: StubbedMethod, GivenProtocol {
+        public var method: MethodType
 
         private init(method: MethodType, products: [StubProduct]) {
             self.method = method
@@ -141,8 +145,8 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
         }
     }
 
-    public struct Verify {
-        fileprivate var method: MethodType
+    public struct Verify: VerifyProtocol {
+        public var method: MethodType
 
         public static func storeItems(items: Parameter<[Item]>) -> Verify { return Verify(method: .m_storeItems__items_items(`items`))}
         public static func storeDetails(details: Parameter<ItemDetails>) -> Verify { return Verify(method: .m_storeDetails__details_details(`details`))}
@@ -150,9 +154,9 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
         public static func storedDetails(item: Parameter<Item>) -> Verify { return Verify(method: .m_storedDetails__item_item(`item`))}
     }
 
-    public struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
+    public struct Perform: PerformProtocol {
+        public var method: MethodType
+        public var performs: Any
 
         public static func storeItems(items: Parameter<[Item]>, perform: @escaping ([Item]) -> Void) -> Perform {
             return Perform(method: .m_storeItems__items_items(`items`), performs: perform)
@@ -169,58 +173,15 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
     }
 
     public func given(_ method: Given) {
-        methodReturnValues.append(method)
+        registry.given(method)
     }
 
     public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+        registry.perform(method)
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
-    private func addInvocation(_ call: MethodType) {
-        invocations.append(call)
-    }
-    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
-    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            onFatalFailure(message)
-            Failure(message)
-        }
-    }
-    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
-    }
-    private func onFatalFailure(_ message: String) {
-        #if Mocky
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        registry.verify(method, count: count, file: file, line: line)
     }
     
 // sourcery:end

@@ -585,9 +585,9 @@ class MethodWrapper {
     var invocation: String {
         guard !method.isInitializer else { return "" }
         if method.parameters.isEmpty {
-            return "addInvocation(.\(prototype))"
+            return "registry.addInvocation(.\(prototype))"
         } else {
-            return "addInvocation(.\(prototype)(\(parametersForMethodCall())))"
+            return "registry.addInvocation(.\(prototype)(\(parametersForMethodCall())))"
         }
     }
     var givenValue: String {
@@ -600,7 +600,7 @@ class MethodWrapper {
         if method.returnTypeName.isVoid {
             return """
             \n\t\tdo {
-            \t\t    _ = try methodReturnValue(\(methodType)).casted() as Void
+            \t\t    _ = try registry.methodReturnValue(\(methodType)).casted() as Void
             \t\t}\(" ")
             """
         } else {
@@ -608,7 +608,7 @@ class MethodWrapper {
             return """
             \n\t\tvar __value: \(returnType)\(defaultValue)
             \t\tdo {
-            \t\t    __value = try methodReturnValue(\(methodType)).casted()
+            \t\t    __value = try registry.methodReturnValue(\(methodType)).casted()
             \t\t}\(" ")
             """
         }
@@ -616,7 +616,7 @@ class MethodWrapper {
     var throwValue: String {
         guard !method.isInitializer else { return "" }
         guard method.throws || !method.returnTypeName.isVoid else { return "" }
-        let safeFailure = method.isStatic ? "" : "\t\t\tonFatalFailure(\"\(noStubDefinedMessage)\")\n"
+        let safeFailure = method.isStatic ? "" : "\t\t\tregistry.onFatalFailure(\"\(noStubDefinedMessage)\")\n"
         // For Void and Returning optionals - we allow not stubbed case to happen, as we are still able to return
         let noStubHandling = method.returnTypeName.isVoid || method.returnTypeName.isOptional ? "\t\t\t// do nothing" : "\(safeFailure)\t\t\tFailure(\"\(noStubDefinedMessage)\")"
         guard method.throws else {
@@ -956,7 +956,7 @@ class MethodWrapper {
         let type = performProxyClosureType()
         var proxy = method.parameters.isEmpty ? "\(prototype)" : "\(prototype)(\(parametersForMethodCall()))"
 
-        let cast = "let perform = methodPerformValue(.\(proxy)) as? \(type)"
+        let cast = "let perform = registry.methodPerformValue(.\(proxy)) as? \(type)"
         let call = performProxyClosureCall()
 
         return "\n\t\t\(cast)\n\t\t\(call)"
@@ -1198,18 +1198,18 @@ class SubscriptWrapper {
     }
     private func getter() -> String {
         let method = ".\(subscriptCasePrefix("get"))(\(parametersForMethodCall()))"
-        let noStubDefined = wrapped.returnTypeName.isOptional ? "return nil" : "onFatalFailure(\"\(noStubDefinedMessage)\"); Failure(\"noStubDefinedMessage\")"
+        let noStubDefined = wrapped.returnTypeName.isOptional ? "return nil" : "registry.onFatalFailure(\"\(noStubDefinedMessage)\"); Failure(\"noStubDefinedMessage\")"
         return
-            "\n\t\t\taddInvocation(\(method))" +
+            "\n\t\t\tregistry.addInvocation(\(method))" +
                 "\n\t\t\tdo {" +
-                "\n\t\t\t\treturn try methodReturnValue(\(method)).casted()" +
+                "\n\t\t\t\treturn try registry.methodReturnValue(\(method)).casted()" +
                 "\n\t\t\t} catch {" +
                 "\n\t\t\t\t\(noStubDefined)" +
         "\n\t\t\t}"
     }
     private func setter() -> String {
         let method = ".\(subscriptCasePrefix("set"))(\(parametersForMethodCall(set: true)))"
-        return "\n\t\t\taddInvocation(\(method))"
+        return "\n\t\t\tregistry.addInvocation(\(method))"
     }
 
     // method type
@@ -1337,8 +1337,8 @@ class VariableWrapper {
 
     var getter: String {
         let staticModifier = variable.isStatic ? "\(scope)." : ""
-        let returnValue = variable.isOptional ? "optionalGivenGetterValue(.\(propertyCaseGetName), \"\(noStubDefinedMessage)\")" : "givenGetterValue(.\(propertyCaseGetName), \"\(noStubDefinedMessage)\")"
-        return "\n\t\tget {\t\(staticModifier)invocations.append(.\(propertyCaseGetName)); return \(staticModifier)\(privatePrototypeName) ?? \(returnValue) }"
+        let returnValue = variable.isOptional ? "registry.optionalGivenGetterValue(.\(propertyCaseGetName), \"\(noStubDefinedMessage)\")" : "registry.givenGetterValue(.\(propertyCaseGetName), \"\(noStubDefinedMessage)\")"
+        return "\n\t\tget {\t\(staticModifier)registry.addInvocation(.\(propertyCaseGetName)); return \(staticModifier)\(privatePrototypeName) ?? \(returnValue) }"
     }
     var setter: String {
         let staticModifier = variable.isStatic ? "\(scope)." : ""
@@ -1346,7 +1346,7 @@ class VariableWrapper {
             let annotation = readonly ? "\n\t\t@available(*, deprecated, message: \"\(deprecatedMessage)\")" : ""
             return "\(annotation)\n\t\tset {\t\(variable.isStatic ? "\(scope)." : "")\(privatePrototypeName) = newValue }"
         } else {
-            return "\n\t\tset {\t\(staticModifier)invocations.append(.\(propertyCaseSetName)(.value(newValue))); \(variable.isStatic ? "\(scope)." : "")\(privatePrototypeName) = newValue }"
+            return "\n\t\tset {\t\(staticModifier)registry.addInvocation(.\(propertyCaseSetName)(.value(newValue))); \(variable.isStatic ? "\(scope)." : "")\(privatePrototypeName) = newValue }"
         }
     }
     var prototype: String {
@@ -1445,11 +1445,12 @@ _%>
 // MARK: - <%= type.name %>
 <%= accessModifier %> class <%= type.name %>Mock<%= genericTypesModifier %>:<%= type.annotations["ObjcProtocol"] != nil ? " NSObject," : "" %> <%= type.name %>, Mock<%= conformsToStaticMock ? ", StaticMock" : "" %><%= genericTypesConstraints %> {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
-        SwiftyMockyTestObserver.setup()
+    <%_ if type.annotations["ObjcProtocol"] != nil { -%>
+        super.init()
+    <%_ } -%>
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
-        self.file = file
-        self.line = line
+        self.setupMock(file: file, line: line)
     }
 
 <%_ } else { -%>
@@ -1457,39 +1458,51 @@ _%>
 <%_ } -%>
 <%# ================================================== MAIN CLASS -%><%_ -%>
   <%# ================================================== MOCK INTERNALS -%><%_ -%>
-    var matcher: Matcher = Matcher.default
-    var stubbingPolicy: StubbingPolicy = .wrap
-    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    private var file: StaticString?
-    private var line: UInt?
-
+    private let registry = MockRegistry<MethodType, Given, Verify, Perform>()
+    var matcher: Matcher {
+        get { return registry.matcher }
+        set { registry.matcher = newValue }
+    }
+    var stubbingPolicy: StubbingPolicy {
+        get { return registry.stubbingPolicy }
+        set { registry.stubbingPolicy = newValue }
+    }
+    var sequencingPolicy: SequencingPolicy {
+        get { return registry.sequencingPolicy }
+        set { registry.sequencingPolicy = newValue }
+    }
+    
     public typealias PropertyStub = Given
     public typealias MethodStub = Given
     public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
-        self.file = file
-        self.line = line
+        registry.setupMock(file: file, line: line)
     }
     <%_ -%>
   <%# ================================================== STATIC MOCK INTERNALS -%><%_ -%>
     <%_ if conformsToStaticMock { -%>
-    static var matcher: Matcher = Matcher.default
-    static var stubbingPolicy: StubbingPolicy = .wrap
-    static var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    static private var invocations: [StaticMethodType] = []
-    static private var methodReturnValues: [StaticGiven] = []
-    static private var methodPerformValues: [StaticPerform] = []
+
+    static var registry = MockRegistry<StaticMethodType, StaticGiven, StaticVerify, StaticPerform>()
+    
+    static var matcher: Matcher {
+        get { return registry.matcher }
+        set { registry.matcher = newValue }
+    }
+    static var stubbingPolicy: StubbingPolicy {
+        get { return registry.stubbingPolicy }
+        set { registry.stubbingPolicy = newValue }
+    }
+    static var sequencingPolicy: SequencingPolicy {
+        get { return registry.sequencingPolicy }
+        set { registry.sequencingPolicy = newValue }
+    }
     public typealias StaticPropertyStub = StaticGiven
     public typealias StaticMethodStub = StaticGiven
+
     public static func clear() {
-        invocations = []
-        methodReturnValues = []
-        methodPerformValues = []
+        registry.clear()
     }
     <%_  } -%>
 
@@ -1565,14 +1578,14 @@ _%>
     <%_ } -%>
   <%# ================================================== STATIC METHOD TYPE -%><%_ -%>
     <%_ if conformsToStaticMock { -%>
-    fileprivate enum StaticMethodType {
+    public enum StaticMethodType: MethodTypeProtocol {
     <%_ for method in wrappedStaticMethodsForMethodType { -%>
         case <%= method.methodTypeDeclarationWithParameters() _%>
     <%_  } %> <%_ for variable in allStaticVariables { -%>
         <%= propertyMethodTypes(variable) %>
     <%_ } %> <%_ %>
     <%_ -%>
-        static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
+        public static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) { <%_ for method in wrappedStaticMethodsForMethodType { %>
             <%= method.equalCase -%><% for parameter in method.parameters { %>
                 <%= parameter.comparator -%> <%  } %>
@@ -1585,7 +1598,7 @@ _%>
             }
         }
     <%_ %>
-        func intValue() -> Int {
+        public func intValue() -> Int {
             switch self { <%_ for method in wrappedStaticMethodsForMethodType { %>
                 <%= method.intValueCase -%><% } %>
                 <%_ for variable in allStaticVariables { -%>
@@ -1595,8 +1608,8 @@ _%>
         }
     }
 
-    open class StaticGiven: StubbedMethod {
-        fileprivate var method: StaticMethodType
+    open class StaticGiven: StubbedMethod, GivenProtocol {
+        public var method: StaticMethodType
 
         private init(method: StaticMethodType, products: [StubProduct]) {
             self.method = method
@@ -1638,8 +1651,8 @@ _%>
         <%_ } %> <%_ -%>
     }
 
-    public struct StaticVerify {
-        fileprivate var method: StaticMethodType
+    public struct StaticVerify: VerifyProtocol {
+        public var method: StaticMethodType
 
         <%_ for method in wrappedStaticMethodsForMethodType { -%>
         <%= method.verificationProxyConstructorName(prefix: "Static") -%> { <%= method.verificationProxyConstructor(prefix: "Static") _%> }
@@ -1652,9 +1665,9 @@ _%>
         <%_ } %> <%_ -%>
     }
 
-    public struct StaticPerform {
-        fileprivate var method: StaticMethodType
-        var performs: Any
+    public struct StaticPerform: PerformProtocol {
+        public var method: StaticMethodType
+        public var performs: Any
 
         <%_ for method in wrappedStaticMethodsForMethodType { -%>
         <%= method.performProxyConstructorName(prefix: "Static") -%> {
@@ -1672,7 +1685,7 @@ _%>
   <%# ================================================== METHOD TYPE -%><%_ -%>
     <%_ if !wrappedMethods.isEmpty || !allVariables.isEmpty || !allSubscripts.isEmpty { -%>
 
-    fileprivate enum MethodType {
+    public enum MethodType: MethodTypeProtocol {
     <%_ for method in wrappedMethodsForMethodType { -%>
         case <%= method.methodTypeDeclarationWithParameters() _%>
     <%_  } -%> <%_ for variable in allVariables { -%>
@@ -1681,7 +1694,7 @@ _%>
         <%= wrapped.subscriptCases() _%>
     <%_ } %> <%_ %>
     <%_ -%>
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+        public static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) { <%_ for method in wrappedMethodsForMethodType { %>
             <%= method.equalCase -%><% for parameter in method.parameters { %>
                 <%= parameter.comparator -%> <%  } %>
@@ -1696,7 +1709,7 @@ _%>
             }
         }
     <%_ %>
-        func intValue() -> Int {
+        public func intValue() -> Int {
             switch self { <%_ for method in wrappedMethodsForMethodType { %>
             <%= method.intValueCase -%><% } %>
             <%_ for variable in allVariables { -%>
@@ -1708,14 +1721,14 @@ _%>
         }
     }
     <%_ } else { %>
-    fileprivate struct MethodType {
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool { return true }
-        func intValue() -> Int { return 0 }
+    public struct MethodType: MethodTypeProtocol {
+        public static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool { return true }
+        public func intValue() -> Int { return 0 }
     }
     <%_ } -%><%_ -%>
 
-    open class Given: StubbedMethod {
-        fileprivate var method: MethodType
+    open class Given: StubbedMethod, GivenProtocol {
+        public var method: MethodType
 
         private init(method: MethodType, products: [StubProduct]) {
             self.method = method
@@ -1762,8 +1775,8 @@ _%>
         <%_ } %> <%_ -%>
     }
 
-    public struct Verify {
-        fileprivate var method: MethodType
+    public struct Verify: VerifyProtocol {
+        public var method: MethodType
 
         <%_ for method in wrappedMethodsForMethodType { -%>
         <%= method.verificationProxyConstructorName() -%> { <%= method.verificationProxyConstructor() _%> }
@@ -1782,9 +1795,9 @@ _%>
         <%_ } %> <%_ -%>
     }
 
-    public struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
+    public struct Perform: PerformProtocol {
+        public var method: MethodType
+        public var performs: Any
 
         <%_ for method in wrappedMethodsForMethodType { -%>
         <%= method.performProxyConstructorName() -%> {
@@ -1800,108 +1813,29 @@ _%>
 
   <%# ================================================== MOCK METHODS -%><%_ -%>
     public func given(_ method: Given) {
-        methodReturnValues.append(method)
+        registry.given(method)
     }
 
     public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+        registry.perform(method)
     }
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
-    private func addInvocation(_ call: MethodType) {
-        invocations.append(call)
-    }
-    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
-    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            onFatalFailure(message)
-            Failure(message)
-        }
-    }
-    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
-    }
-    private func onFatalFailure(_ message: String) {
-        #if Mocky
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
+        registry.verify(method, count: count, file: file, line: line)
     }
   <%# ================================================== STATIC MOCK METHODS -%><%_ -%>
     <%_ if conformsToStaticMock { -%>
 
     static public func given(_ method: StaticGiven) {
-        methodReturnValues.append(method)
+        registry.given(method)
     }
 
     static public func perform(_ method: StaticPerform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+        registry.perform(method)
     }
 
     static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
-    static private func addInvocation(_ call: StaticMethodType) {
-        invocations.append(call)
-    }
-    static private func methodReturnValue(_ method: StaticMethodType) throws -> StubProduct {
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    static private func methodPerformValue(_ method: StaticMethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    static private func matchingCalls(_ method: StaticMethodType) -> [StaticMethodType] {
-        return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    static private func matchingCalls(_ method: StaticVerify) -> Int {
-        return matchingCalls(method.method).count
-    }
-    static private func givenGetterValue<T>(_ method: StaticMethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            Failure(message)
-        }
-    }
-    static private func optionalGivenGetterValue<T>(_ method: StaticMethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
+        registry.verify(method, count: count, file: file, line: line)
     }
     <%_ } -%>
 <%_ if autoMockable { -%>

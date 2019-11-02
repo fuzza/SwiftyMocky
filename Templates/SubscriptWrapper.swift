@@ -67,18 +67,18 @@ class SubscriptWrapper {
     }
     private func getter() -> String {
         let method = ".\(subscriptCasePrefix("get"))(\(parametersForMethodCall()))"
-        let noStubDefined = wrapped.returnTypeName.isOptional ? "return nil" : "onFatalFailure(\"\(noStubDefinedMessage)\"); Failure(\"noStubDefinedMessage\")"
+        let noStubDefined = wrapped.returnTypeName.isOptional ? "return nil" : "registry.onFatalFailure(\"\(noStubDefinedMessage)\"); Failure(\"noStubDefinedMessage\")"
         return
-            "\n\t\t\taddInvocation(\(method))" +
+            "\n\t\t\tregistry.addInvocation(\(method))" +
                 "\n\t\t\tdo {" +
-                "\n\t\t\t\treturn try methodReturnValue(\(method)).casted()" +
+                "\n\t\t\t\treturn try registry.methodReturnValue(\(method)).casted()" +
                 "\n\t\t\t} catch {" +
                 "\n\t\t\t\t\(noStubDefined)" +
         "\n\t\t\t}"
     }
     private func setter() -> String {
         let method = ".\(subscriptCasePrefix("set"))(\(parametersForMethodCall(set: true)))"
-        return "\n\t\t\taddInvocation(\(method))"
+        return "\n\t\t\tregistry.addInvocation(\(method))"
     }
 
     // method type
