@@ -91,44 +91,27 @@ open class AMassiveTestProtocolMock: AMassiveTestProtocol, Mock, StaticMock {
 
 
     public static func methodThatThrows() throws {
-        registry.addInvocation(.sm_methodThatThrows)
-		let perform = registry.methodPerformValue(.sm_methodThatThrows) as? () -> Void
-		perform?()
-		do {
-		    _ = try registry.methodReturnValue(.sm_methodThatThrows).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
+        let method = StaticMethodType.sm_methodThatThrows
+		let stringName = "methodThatThrows()"
+		return try registry.invokeThrowing(method, named: stringName) {
+			($0 as? () -> Void)?()
 		}
     }
 
     public static func methodThatReturnsAndThrows(param: String) throws -> Int {
-        registry.addInvocation(.sm_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`)))
-		let perform = registry.methodPerformValue(.sm_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))) as? (String) -> Void
-		perform?(`param`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.sm_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))).casted()
-		} catch MockError.notStubed {
-			Failure("Stub return value not specified for methodThatReturnsAndThrows(param: String). Use given")
-		} catch {
-		    throw error
+        let method = StaticMethodType.sm_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))
+		let stringName = "methodThatReturnsAndThrows(param: String)"
+		return try registry.invokeThrowing(method, of: (Int).self, named: stringName) {
+			($0 as? (String) -> Void)?(`param`)
 		}
-		return __value
     }
 
     public static func methodThatRethrows(param: (String) throws -> Int) rethrows -> Int {
-        registry.addInvocation(.sm_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any))
-		let perform = registry.methodPerformValue(.sm_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)) as? ((String) throws -> Int) -> Void
-		perform?(`param`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.sm_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)).casted()
-		} catch {
-			Failure("Stub return value not specified for methodThatRethrows(param: (String) throws -> Int). Use given")
+        let method = StaticMethodType.sm_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)
+		let stringName = "methodThatRethrows(param: (String) throws -> Int)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? ((String) throws -> Int) -> Void)?(`param`)
 		}
-		return __value
     }
 
     public required init() { }
@@ -136,46 +119,27 @@ open class AMassiveTestProtocolMock: AMassiveTestProtocol, Mock, StaticMock {
     public required init(_ sth: Int) { }
 
     open func methodThatThrows() throws {
-        registry.addInvocation(.m_methodThatThrows)
-		let perform = registry.methodPerformValue(.m_methodThatThrows) as? () -> Void
-		perform?()
-		do {
-		    _ = try registry.methodReturnValue(.m_methodThatThrows).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
+        let method = MethodType.m_methodThatThrows
+		let stringName = "methodThatThrows()"
+		return try registry.invokeThrowing(method, named: stringName) {
+			($0 as? () -> Void)?()
 		}
     }
 
     open func methodThatReturnsAndThrows(param: String) throws -> Int {
-        registry.addInvocation(.m_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`)))
-		let perform = registry.methodPerformValue(.m_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))) as? (String) -> Void
-		perform?(`param`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))).casted()
-		} catch MockError.notStubed {
-			registry.onFatalFailure("Stub return value not specified for methodThatReturnsAndThrows(param: String). Use given")
-			Failure("Stub return value not specified for methodThatReturnsAndThrows(param: String). Use given")
-		} catch {
-		    throw error
+        let method = MethodType.m_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))
+		let stringName = "methodThatReturnsAndThrows(param: String)"
+		return try registry.invokeThrowing(method, of: (Int).self, named: stringName) {
+			($0 as? (String) -> Void)?(`param`)
 		}
-		return __value
     }
 
     open func methodThatRethrows(param: (String) throws -> Int) rethrows -> Int {
-        registry.addInvocation(.m_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any))
-		let perform = registry.methodPerformValue(.m_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)) as? ((String) throws -> Int) -> Void
-		perform?(`param`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodThatRethrows(param: (String) throws -> Int). Use given")
-			Failure("Stub return value not specified for methodThatRethrows(param: (String) throws -> Int). Use given")
+        let method = MethodType.m_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)
+		let stringName = "methodThatRethrows(param: (String) throws -> Int)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? ((String) throws -> Int) -> Void)?(`param`)
 		}
-		return __value
     }
 
     public enum StaticMethodType: MethodTypeProtocol {
@@ -480,17 +444,11 @@ open class AVeryAssociatedProtocolMock<T1,T2>: AVeryAssociatedProtocol, Mock whe
 
 
     open func fetch(for value: T2) -> T1 {
-        registry.addInvocation(.m_fetch__for_value(Parameter<T2>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_fetch__for_value(Parameter<T2>.value(`value`))) as? (T2) -> Void
-		perform?(`value`)
-		var __value: T1
-		do {
-		    __value = try registry.methodReturnValue(.m_fetch__for_value(Parameter<T2>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for fetch(for value: T2). Use given")
-			Failure("Stub return value not specified for fetch(for value: T2). Use given")
+        let method = MethodType.m_fetch__for_value(Parameter<T2>.value(`value`))
+		let stringName = "fetch(for value: T2)"
+		return registry.invoke(method, of: (T1).self, named: stringName) {
+			($0 as? (T2) -> Void)?(`value`)
 		}
-		return __value
     }
 
 
@@ -618,45 +576,29 @@ open class AVeryGenericProtocolMock: AVeryGenericProtocol, Mock, StaticMock {
 
 
     public static func generic<Q>(lhs: Q, rhs: Q) -> Bool where Q: Equatable {
-        registry.addInvocation(.sm_generic__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.sm_generic__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())) as? (Q, Q) -> Void
-		perform?(`lhs`, `rhs`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.sm_generic__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())).casted()
-		} catch {
-			Failure("Stub return value not specified for generic<Q>(lhs: Q, rhs: Q). Use given")
+        let method = StaticMethodType.sm_generic__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())
+		let stringName = "generic<Q>(lhs: Q, rhs: Q)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Q, Q) -> Void)?(`lhs`, `rhs`)
 		}
-		return __value
     }
 
     public static func veryConstrained<Q: Sequence>(lhs: Q, rhs: Q) -> Bool where Q: Equatable {
-        registry.addInvocation(.sm_veryConstrained__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.sm_veryConstrained__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())) as? (Q, Q) -> Void
-		perform?(`lhs`, `rhs`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.sm_veryConstrained__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())).casted()
-		} catch {
-			Failure("Stub return value not specified for veryConstrained<Q: Sequence>(lhs: Q, rhs: Q). Use given")
+        let method = StaticMethodType.sm_veryConstrained__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())
+		let stringName = "veryConstrained<Q: Sequence>(lhs: Q, rhs: Q)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Q, Q) -> Void)?(`lhs`, `rhs`)
 		}
-		return __value
     }
 
     public required init<V>(value: V) { }
 
     open func methodConstrained<A,B,C>(param: A) -> (B,C) {
-        registry.addInvocation(.m_methodConstrained__param_param(Parameter<A>.value(`param`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_methodConstrained__param_param(Parameter<A>.value(`param`).wrapAsGeneric())) as? (A) -> Void
-		perform?(`param`)
-		var __value: (B,C)
-		do {
-		    __value = try registry.methodReturnValue(.m_methodConstrained__param_param(Parameter<A>.value(`param`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodConstrained<A,B,C>(param: A). Use given")
-			Failure("Stub return value not specified for methodConstrained<A,B,C>(param: A). Use given")
+        let method = MethodType.m_methodConstrained__param_param(Parameter<A>.value(`param`).wrapAsGeneric())
+		let stringName = "methodConstrained<A,B,C>(param: A)"
+		return registry.invoke(method, of: ((B,C)).self, named: stringName) {
+			($0 as? (A) -> Void)?(`param`)
 		}
-		return __value
     }
 
     public enum StaticMethodType: MethodTypeProtocol {
@@ -851,171 +793,99 @@ open class AllLiteralsContainerMock: AllLiteralsContainer, Mock {
 
 
     open func methodWithStringParameter(p: String) -> Int {
-        registry.addInvocation(.m_methodWithStringParameter__p_p(Parameter<String>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithStringParameter__p_p(Parameter<String>.value(`p`))) as? (String) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithStringParameter__p_p(Parameter<String>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithStringParameter(p: String). Use given")
-			Failure("Stub return value not specified for methodWithStringParameter(p: String). Use given")
+        let method = MethodType.m_methodWithStringParameter__p_p(Parameter<String>.value(`p`))
+		let stringName = "methodWithStringParameter(p: String)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (String) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithOtionalStringParameter(p: String?) -> Int {
-        registry.addInvocation(.m_methodWithOtionalStringParameter__p_p(Parameter<String?>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithOtionalStringParameter__p_p(Parameter<String?>.value(`p`))) as? (String?) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithOtionalStringParameter__p_p(Parameter<String?>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithOtionalStringParameter(p: String?). Use given")
-			Failure("Stub return value not specified for methodWithOtionalStringParameter(p: String?). Use given")
+        let method = MethodType.m_methodWithOtionalStringParameter__p_p(Parameter<String?>.value(`p`))
+		let stringName = "methodWithOtionalStringParameter(p: String?)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (String?) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithCustomStringParameter(p: CustomString) -> Int {
-        registry.addInvocation(.m_methodWithCustomStringParameter__p_p(Parameter<CustomString>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithCustomStringParameter__p_p(Parameter<CustomString>.value(`p`))) as? (CustomString) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithCustomStringParameter__p_p(Parameter<CustomString>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithCustomStringParameter(p: CustomString). Use given")
-			Failure("Stub return value not specified for methodWithCustomStringParameter(p: CustomString). Use given")
+        let method = MethodType.m_methodWithCustomStringParameter__p_p(Parameter<CustomString>.value(`p`))
+		let stringName = "methodWithCustomStringParameter(p: CustomString)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (CustomString) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithCustomOptionalStringParameter(p: CustomString?) -> Int {
-        registry.addInvocation(.m_methodWithCustomOptionalStringParameter__p_p(Parameter<CustomString?>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithCustomOptionalStringParameter__p_p(Parameter<CustomString?>.value(`p`))) as? (CustomString?) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithCustomOptionalStringParameter__p_p(Parameter<CustomString?>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithCustomOptionalStringParameter(p: CustomString?). Use given")
-			Failure("Stub return value not specified for methodWithCustomOptionalStringParameter(p: CustomString?). Use given")
+        let method = MethodType.m_methodWithCustomOptionalStringParameter__p_p(Parameter<CustomString?>.value(`p`))
+		let stringName = "methodWithCustomOptionalStringParameter(p: CustomString?)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (CustomString?) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithIntParameter(p: Int) -> Int {
-        registry.addInvocation(.m_methodWithIntParameter__p_p(Parameter<Int>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithIntParameter__p_p(Parameter<Int>.value(`p`))) as? (Int) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithIntParameter__p_p(Parameter<Int>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithIntParameter(p: Int). Use given")
-			Failure("Stub return value not specified for methodWithIntParameter(p: Int). Use given")
+        let method = MethodType.m_methodWithIntParameter__p_p(Parameter<Int>.value(`p`))
+		let stringName = "methodWithIntParameter(p: Int)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithCustomOptionalIntParameter(p: CustomInt?) -> Int {
-        registry.addInvocation(.m_methodWithCustomOptionalIntParameter__p_p(Parameter<CustomInt?>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithCustomOptionalIntParameter__p_p(Parameter<CustomInt?>.value(`p`))) as? (CustomInt?) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithCustomOptionalIntParameter__p_p(Parameter<CustomInt?>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithCustomOptionalIntParameter(p: CustomInt?). Use given")
-			Failure("Stub return value not specified for methodWithCustomOptionalIntParameter(p: CustomInt?). Use given")
+        let method = MethodType.m_methodWithCustomOptionalIntParameter__p_p(Parameter<CustomInt?>.value(`p`))
+		let stringName = "methodWithCustomOptionalIntParameter(p: CustomInt?)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (CustomInt?) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithBool(p: Bool?) -> Int {
-        registry.addInvocation(.m_methodWithBool__p_p(Parameter<Bool?>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithBool__p_p(Parameter<Bool?>.value(`p`))) as? (Bool?) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithBool__p_p(Parameter<Bool?>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithBool(p: Bool?). Use given")
-			Failure("Stub return value not specified for methodWithBool(p: Bool?). Use given")
+        let method = MethodType.m_methodWithBool__p_p(Parameter<Bool?>.value(`p`))
+		let stringName = "methodWithBool(p: Bool?)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (Bool?) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithFloat(p: Float?) -> Int {
-        registry.addInvocation(.m_methodWithFloat__p_p(Parameter<Float?>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithFloat__p_p(Parameter<Float?>.value(`p`))) as? (Float?) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithFloat__p_p(Parameter<Float?>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithFloat(p: Float?). Use given")
-			Failure("Stub return value not specified for methodWithFloat(p: Float?). Use given")
+        let method = MethodType.m_methodWithFloat__p_p(Parameter<Float?>.value(`p`))
+		let stringName = "methodWithFloat(p: Float?)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (Float?) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithDouble(p: Double?) -> Int {
-        registry.addInvocation(.m_methodWithDouble__p_p(Parameter<Double?>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithDouble__p_p(Parameter<Double?>.value(`p`))) as? (Double?) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithDouble__p_p(Parameter<Double?>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithDouble(p: Double?). Use given")
-			Failure("Stub return value not specified for methodWithDouble(p: Double?). Use given")
+        let method = MethodType.m_methodWithDouble__p_p(Parameter<Double?>.value(`p`))
+		let stringName = "methodWithDouble(p: Double?)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (Double?) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithArrayOfInt(p: [Int]) -> Int {
-        registry.addInvocation(.m_methodWithArrayOfInt__p_p(Parameter<[Int]>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithArrayOfInt__p_p(Parameter<[Int]>.value(`p`))) as? ([Int]) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithArrayOfInt__p_p(Parameter<[Int]>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithArrayOfInt(p: [Int]). Use given")
-			Failure("Stub return value not specified for methodWithArrayOfInt(p: [Int]). Use given")
+        let method = MethodType.m_methodWithArrayOfInt__p_p(Parameter<[Int]>.value(`p`))
+		let stringName = "methodWithArrayOfInt(p: [Int])"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? ([Int]) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithArrayOfOther(p: [SomeClass]) -> Int {
-        registry.addInvocation(.m_methodWithArrayOfOther__p_p(Parameter<[SomeClass]>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithArrayOfOther__p_p(Parameter<[SomeClass]>.value(`p`))) as? ([SomeClass]) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithArrayOfOther__p_p(Parameter<[SomeClass]>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithArrayOfOther(p: [SomeClass]). Use given")
-			Failure("Stub return value not specified for methodWithArrayOfOther(p: [SomeClass]). Use given")
+        let method = MethodType.m_methodWithArrayOfOther__p_p(Parameter<[SomeClass]>.value(`p`))
+		let stringName = "methodWithArrayOfOther(p: [SomeClass])"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? ([SomeClass]) -> Void)?(`p`)
 		}
-		return __value
     }
 
     open func methodWithDict(p: [String: SomeClass]) -> Int {
-        registry.addInvocation(.m_methodWithDict__p_p(Parameter<[String: SomeClass]>.value(`p`)))
-		let perform = registry.methodPerformValue(.m_methodWithDict__p_p(Parameter<[String: SomeClass]>.value(`p`))) as? ([String: SomeClass]) -> Void
-		perform?(`p`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithDict__p_p(Parameter<[String: SomeClass]>.value(`p`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithDict(p: [String: SomeClass]). Use given")
-			Failure("Stub return value not specified for methodWithDict(p: [String: SomeClass]). Use given")
+        let method = MethodType.m_methodWithDict__p_p(Parameter<[String: SomeClass]>.value(`p`))
+		let stringName = "methodWithDict(p: [String: SomeClass])"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? ([String: SomeClass]) -> Void)?(`p`)
 		}
-		return __value
     }
 
 
@@ -1332,22 +1202,19 @@ open class AnotherProtocolMock: AnotherProtocol, Mock {
 
 
     open func doSomething<T: ProtocolWithAssociatedType2>(type: T) -> T.ValueType? {
-        registry.addInvocation(.m_doSomething__type_type(Parameter<T>.value(`type`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_doSomething__type_type(Parameter<T>.value(`type`).wrapAsGeneric())) as? (T) -> Void
-		perform?(`type`)
-		var __value: T.ValueType? = nil
-		do {
-		    __value = try registry.methodReturnValue(.m_doSomething__type_type(Parameter<T>.value(`type`).wrapAsGeneric())).casted()
-		} catch {
-			// do nothing
+        let method = MethodType.m_doSomething__type_type(Parameter<T>.value(`type`).wrapAsGeneric())
+		let stringName = "doSomething<T: ProtocolWithAssociatedType2>(type: T)"
+		return registry.invoke(method, of: (T.ValueType?).self, named: stringName) {
+			($0 as? (T) -> Void)?(`type`)
 		}
-		return __value
     }
 
     open func doSomething2<T: ProtocolWithAssociatedType2>(type: T, withValue: T.ValueType?) {
-        registry.addInvocation(.m_doSomething2__type_typewithValue_withValue(Parameter<T>.value(`type`).wrapAsGeneric(), Parameter<T.ValueType?>.value(`withValue`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_doSomething2__type_typewithValue_withValue(Parameter<T>.value(`type`).wrapAsGeneric(), Parameter<T.ValueType?>.value(`withValue`).wrapAsGeneric())) as? (T, T.ValueType?) -> Void
-		perform?(`type`, `withValue`)
+        let method = MethodType.m_doSomething2__type_typewithValue_withValue(Parameter<T>.value(`type`).wrapAsGeneric(), Parameter<T.ValueType?>.value(`withValue`).wrapAsGeneric())
+		let stringName = "doSomething2<T: ProtocolWithAssociatedType2>(type: T, withValue: T.ValueType?)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (T, T.ValueType?) -> Void)?(`type`, `withValue`)
+		}
     }
 
 
@@ -1472,113 +1339,75 @@ open class ComplicatedServiceTypeMock: ComplicatedServiceType, Mock {
 
 
     open func serviceName() -> String {
-        registry.addInvocation(.m_serviceName)
-		let perform = registry.methodPerformValue(.m_serviceName) as? () -> Void
-		perform?()
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_serviceName).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for serviceName(). Use given")
-			Failure("Stub return value not specified for serviceName(). Use given")
+        let method = MethodType.m_serviceName
+		let stringName = "serviceName()"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
     }
 
     open func aNewWayToSayHooray() {
-        registry.addInvocation(.m_aNewWayToSayHooray)
-		let perform = registry.methodPerformValue(.m_aNewWayToSayHooray) as? () -> Void
-		perform?()
+        let method = MethodType.m_aNewWayToSayHooray
+		let stringName = "aNewWayToSayHooray()"
+		return registry.invoke(method, named: stringName) {
+			($0 as? () -> Void)?()
+		}
     }
 
     open func getPoint(from point: Point) -> Point {
-        registry.addInvocation(.m_getPoint__from_point(Parameter<Point>.value(`point`)))
-		let perform = registry.methodPerformValue(.m_getPoint__from_point(Parameter<Point>.value(`point`))) as? (Point) -> Void
-		perform?(`point`)
-		var __value: Point
-		do {
-		    __value = try registry.methodReturnValue(.m_getPoint__from_point(Parameter<Point>.value(`point`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for getPoint(from point: Point). Use given")
-			Failure("Stub return value not specified for getPoint(from point: Point). Use given")
+        let method = MethodType.m_getPoint__from_point(Parameter<Point>.value(`point`))
+		let stringName = "getPoint(from point: Point)"
+		return registry.invoke(method, of: (Point).self, named: stringName) {
+			($0 as? (Point) -> Void)?(`point`)
 		}
-		return __value
     }
 
     open func getPoint(from tuple: (Float,Float)) -> Point {
-        registry.addInvocation(.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`)))
-		let perform = registry.methodPerformValue(.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))) as? ((Float,Float)) -> Void
-		perform?(`tuple`)
-		var __value: Point
-		do {
-		    __value = try registry.methodReturnValue(.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for getPoint(from tuple: (Float,Float)). Use given")
-			Failure("Stub return value not specified for getPoint(from tuple: (Float,Float)). Use given")
+        let method = MethodType.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))
+		let stringName = "getPoint(from tuple: (Float,Float))"
+		return registry.invoke(method, of: (Point).self, named: stringName) {
+			($0 as? ((Float,Float)) -> Void)?(`tuple`)
 		}
-		return __value
     }
 
     open func similarMethodThatDiffersOnType(_ value: Float) -> Bool {
-        registry.addInvocation(.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))) as? (Float) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for similarMethodThatDiffersOnType(_ value: Float). Use given")
-			Failure("Stub return value not specified for similarMethodThatDiffersOnType(_ value: Float). Use given")
+        let method = MethodType.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))
+		let stringName = "similarMethodThatDiffersOnType(_ value: Float)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Float) -> Void)?(`value`)
 		}
-		return __value
     }
 
     open func similarMethodThatDiffersOnType(_ value: Point) -> Bool {
-        registry.addInvocation(.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))) as? (Point) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for similarMethodThatDiffersOnType(_ value: Point). Use given")
-			Failure("Stub return value not specified for similarMethodThatDiffersOnType(_ value: Point). Use given")
+        let method = MethodType.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))
+		let stringName = "similarMethodThatDiffersOnType(_ value: Point)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Point) -> Void)?(`value`)
 		}
-		return __value
     }
 
     open func methodWithTypedef(_ scalar: Scalar) {
-        registry.addInvocation(.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`)))
-		let perform = registry.methodPerformValue(.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`))) as? (Scalar) -> Void
-		perform?(`scalar`)
+        let method = MethodType.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`))
+		let stringName = "methodWithTypedef(_ scalar: Scalar)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (Scalar) -> Void)?(`scalar`)
+		}
     }
 
     open func methodWithClosures(success function: LinearFunction) -> ClosureFabric {
-        registry.addInvocation(.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`)))
-		let perform = registry.methodPerformValue(.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))) as? (LinearFunction) -> Void
-		perform?(`function`)
-		var __value: ClosureFabric
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithClosures(success function: LinearFunction). Use given")
-			Failure("Stub return value not specified for methodWithClosures(success function: LinearFunction). Use given")
+        let method = MethodType.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))
+		let stringName = "methodWithClosures(success function: LinearFunction)"
+		return registry.invoke(method, of: (ClosureFabric).self, named: stringName) {
+			($0 as? (LinearFunction) -> Void)?(`function`)
 		}
-		return __value
     }
 
     open func methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?) -> ((Int) -> Void) {
-        registry.addInvocation(.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`)))
-		let perform = registry.methodPerformValue(.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))) as? (((Scalar,Scalar) -> Scalar)?) -> Void
-		perform?(`function`)
-		var __value: (Int) -> Void
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?). Use given")
-			Failure("Stub return value not specified for methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?). Use given")
+        let method = MethodType.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))
+		let stringName = "methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?)"
+		return registry.invoke(method, of: ((Int) -> Void).self, named: stringName) {
+			($0 as? (((Scalar,Scalar) -> Scalar)?) -> Void)?(`function`)
 		}
-		return __value
     }
 
 
@@ -1921,23 +1750,19 @@ open class EdgeCasesGenericsProtocolMock: EdgeCasesGenericsProtocol, Mock {
 
 
     open func sorted<Key, Value>(by key: Mytest<Key, Value>) {
-        registry.addInvocation(.m_sorted__by_key(Parameter<Mytest<Key, Value>>.value(`key`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_sorted__by_key(Parameter<Mytest<Key, Value>>.value(`key`).wrapAsGeneric())) as? (Mytest<Key, Value>) -> Void
-		perform?(`key`)
+        let method = MethodType.m_sorted__by_key(Parameter<Mytest<Key, Value>>.value(`key`).wrapAsGeneric())
+		let stringName = "sorted<Key, Value>(by key: Mytest<Key, Value>)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (Mytest<Key, Value>) -> Void)?(`key`)
+		}
     }
 
     open func getter<K,V: Sequence,T: Equatable>(swapped key: Mytest<K,V>) -> T {
-        registry.addInvocation(.m_getter__swapped_key(Parameter<Mytest<K,V>>.value(`key`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_getter__swapped_key(Parameter<Mytest<K,V>>.value(`key`).wrapAsGeneric())) as? (Mytest<K,V>) -> Void
-		perform?(`key`)
-		var __value: T
-		do {
-		    __value = try registry.methodReturnValue(.m_getter__swapped_key(Parameter<Mytest<K,V>>.value(`key`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for getter<K,V: Sequence,T: Equatable>(swapped key: Mytest<K,V>). Use given")
-			Failure("Stub return value not specified for getter<K,V: Sequence,T: Equatable>(swapped key: Mytest<K,V>). Use given")
+        let method = MethodType.m_getter__swapped_key(Parameter<Mytest<K,V>>.value(`key`).wrapAsGeneric())
+		let stringName = "getter<K,V: Sequence,T: Equatable>(swapped key: Mytest<K,V>)"
+		return registry.invoke(method, of: (T).self, named: stringName) {
+			($0 as? (Mytest<K,V>) -> Void)?(`key`)
 		}
-		return __value
     }
 
 
@@ -2130,17 +1955,11 @@ open class FailsWithAutoClosureOnSwift5Mock: FailsWithAutoClosureOnSwift5, Mock 
 
 
     open func connect(_ token: @autoclosure () -> String) -> Bool {
-        registry.addInvocation(.m_connect__token(Parameter<() -> String>.any))
-		let perform = registry.methodPerformValue(.m_connect__token(Parameter<() -> String>.any)) as? (@autoclosure () -> String) -> Void
-		perform?(`token`())
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_connect__token(Parameter<() -> String>.any)).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for connect(_ token: @autoclosure () -> String). Use given")
-			Failure("Stub return value not specified for connect(_ token: @autoclosure () -> String). Use given")
+        let method = MethodType.m_connect__token(Parameter<() -> String>.any)
+		let stringName = "connect(_ token: @autoclosure () -> String)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (@autoclosure () -> String) -> Void)?(`token`())
 		}
-		return __value
     }
 
 
@@ -2253,37 +2072,27 @@ open class FailsWithKeywordArgumentsMock: FailsWithKeywordArguments, Mock {
 
 
     open func foo(for: String) {
-        registry.addInvocation(.m_foo__for_for(Parameter<String>.value(`for`)))
-		let perform = registry.methodPerformValue(.m_foo__for_for(Parameter<String>.value(`for`))) as? (String) -> Void
-		perform?(`for`)
+        let method = MethodType.m_foo__for_for(Parameter<String>.value(`for`))
+		let stringName = "foo(for: String)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String) -> Void)?(`for`)
+		}
     }
 
     open func `throw`(while: String) -> Error {
-        registry.addInvocation(.m_throw__while_while(Parameter<String>.value(`while`)))
-		let perform = registry.methodPerformValue(.m_throw__while_while(Parameter<String>.value(`while`))) as? (String) -> Void
-		perform?(`while`)
-		var __value: Error
-		do {
-		    __value = try registry.methodReturnValue(.m_throw__while_while(Parameter<String>.value(`while`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for `throw`(while: String). Use given")
-			Failure("Stub return value not specified for `throw`(while: String). Use given")
+        let method = MethodType.m_throw__while_while(Parameter<String>.value(`while`))
+		let stringName = "`throw`(while: String)"
+		return registry.invoke(method, of: (Error).self, named: stringName) {
+			($0 as? (String) -> Void)?(`while`)
 		}
-		return __value
     }
 
     open func `return`(do while: String) -> Bool {
-        registry.addInvocation(.m_return__do_while(Parameter<String>.value(`while`)))
-		let perform = registry.methodPerformValue(.m_return__do_while(Parameter<String>.value(`while`))) as? (String) -> Void
-		perform?(`while`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_return__do_while(Parameter<String>.value(`while`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for `return`(do while: String). Use given")
-			Failure("Stub return value not specified for `return`(do while: String). Use given")
+        let method = MethodType.m_return__do_while(Parameter<String>.value(`while`))
+		let stringName = "`return`(do while: String)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (String) -> Void)?(`while`)
 		}
-		return __value
     }
 
     public subscript (_ return: Int) -> Bool {
@@ -2460,81 +2269,51 @@ public final class FailsWithReturnedTypeBeingGenericOfSelfMock: FailsWithReturne
 
     public func methodWillReturnSelfTypedArray() -> Array<FailsWithReturnedTypeBeingGenericOfSelfMock>  {
         func _wrapped<__Self__>() -> __Self__ {
-		registry.addInvocation(.m_methodWillReturnSelfTypedArray)
-		let perform = registry.methodPerformValue(.m_methodWillReturnSelfTypedArray) as? () -> Void
-		perform?()
-		var __value: __Self__
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWillReturnSelfTypedArray).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWillReturnSelfTypedArray(). Use given")
-			Failure("Stub return value not specified for methodWillReturnSelfTypedArray(). Use given")
+		let method = MethodType.m_methodWillReturnSelfTypedArray
+		let stringName = "methodWillReturnSelfTypedArray()"
+		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
 		}
 		return _wrapped()
     }
 
     public func methodWillReturnSelfTypedArray2() -> [FailsWithReturnedTypeBeingGenericOfSelfMock]  {
         func _wrapped<__Self__>() -> __Self__ {
-		registry.addInvocation(.m_methodWillReturnSelfTypedArray2)
-		let perform = registry.methodPerformValue(.m_methodWillReturnSelfTypedArray2) as? () -> Void
-		perform?()
-		var __value: __Self__
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWillReturnSelfTypedArray2).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWillReturnSelfTypedArray2(). Use given")
-			Failure("Stub return value not specified for methodWillReturnSelfTypedArray2(). Use given")
+		let method = MethodType.m_methodWillReturnSelfTypedArray2
+		let stringName = "methodWillReturnSelfTypedArray2()"
+		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
 		}
 		return _wrapped()
     }
 
     public func methodWillReturnSelfTypedCustom() -> CustomGeneric<FailsWithReturnedTypeBeingGenericOfSelfMock>  {
         func _wrapped<__Self__>() -> __Self__ {
-		registry.addInvocation(.m_methodWillReturnSelfTypedCustom)
-		let perform = registry.methodPerformValue(.m_methodWillReturnSelfTypedCustom) as? () -> Void
-		perform?()
-		var __value: __Self__
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWillReturnSelfTypedCustom).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWillReturnSelfTypedCustom(). Use given")
-			Failure("Stub return value not specified for methodWillReturnSelfTypedCustom(). Use given")
+		let method = MethodType.m_methodWillReturnSelfTypedCustom
+		let stringName = "methodWillReturnSelfTypedCustom()"
+		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
 		}
 		return _wrapped()
     }
 
     open func test(value: FailsWithReturnedTypeBeingGenericOfSelfMock) -> Bool {
-        registry.addInvocation(.m_test__value_value(Parameter<FailsWithReturnedTypeBeingGenericOfSelfMock>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_test__value_value(Parameter<FailsWithReturnedTypeBeingGenericOfSelfMock>.value(`value`))) as? (FailsWithReturnedTypeBeingGenericOfSelfMock) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_test__value_value(Parameter<FailsWithReturnedTypeBeingGenericOfSelfMock>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for test(value: FailsWithReturnedTypeBeingGenericOfSelfMock). Use given")
-			Failure("Stub return value not specified for test(value: FailsWithReturnedTypeBeingGenericOfSelfMock). Use given")
+        let method = MethodType.m_test__value_value(Parameter<FailsWithReturnedTypeBeingGenericOfSelfMock>.value(`value`))
+		let stringName = "test(value: FailsWithReturnedTypeBeingGenericOfSelfMock)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (FailsWithReturnedTypeBeingGenericOfSelfMock) -> Void)?(`value`)
 		}
-		return __value
     }
 
     open func insanetTest(value: CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>) -> Bool {
-        registry.addInvocation(.m_insanetTest__value_value(Parameter<CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_insanetTest__value_value(Parameter<CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>>.value(`value`))) as? (CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_insanetTest__value_value(Parameter<CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for insanetTest(value: CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>). Use given")
-			Failure("Stub return value not specified for insanetTest(value: CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>). Use given")
+        let method = MethodType.m_insanetTest__value_value(Parameter<CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>>.value(`value`))
+		let stringName = "insanetTest(value: CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>) -> Void)?(`value`)
 		}
-		return __value
     }
 
 
@@ -2717,9 +2496,11 @@ open class FailsWithUntaggedMock: FailsWithUntagged, Mock {
     public required init<T>(with t: T) { }
 
     open func foo<T>(_: T, bar : String) where T: Sequence {
-        registry.addInvocation(.m_foo__barbar(Parameter<String>.value(`bar`)))
-		let perform = registry.methodPerformValue(.m_foo__barbar(Parameter<String>.value(`bar`))) as? (String) -> Void
-		perform?(`bar`)
+        let method = MethodType.m_foo__barbar(Parameter<String>.value(`bar`))
+		let stringName = "foo<T>(_: T, bar : String)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String) -> Void)?(`bar`)
+		}
     }
 
 
@@ -2816,17 +2597,11 @@ open class GenericProtocolReturningIntMock: GenericProtocolReturningInt, Mock {
 
 
     open func value<T>(for value: T) -> Int {
-        registry.addInvocation(.m_value__for_value(Parameter<T>.value(`value`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_value__for_value(Parameter<T>.value(`value`).wrapAsGeneric())) as? (T) -> Void
-		perform?(`value`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_value__for_value(Parameter<T>.value(`value`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for value<T>(for value: T). Use given")
-			Failure("Stub return value not specified for value<T>(for value: T). Use given")
+        let method = MethodType.m_value__for_value(Parameter<T>.value(`value`).wrapAsGeneric())
+		let stringName = "value<T>(for value: T)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (T) -> Void)?(`value`)
 		}
-		return __value
     }
 
 
@@ -2933,31 +2708,19 @@ open class GenericProtocolWithTypeConstraintMock: GenericProtocolWithTypeConstra
 
 
     open func decode<T: Decodable>(_ type: T.Type, from data: Data) -> T {
-        registry.addInvocation(.m_decode__typefrom_data(Parameter<T.Type>.value(`type`).wrapAsGeneric(), Parameter<Data>.value(`data`)))
-		let perform = registry.methodPerformValue(.m_decode__typefrom_data(Parameter<T.Type>.value(`type`).wrapAsGeneric(), Parameter<Data>.value(`data`))) as? (T.Type, Data) -> Void
-		perform?(`type`, `data`)
-		var __value: T
-		do {
-		    __value = try registry.methodReturnValue(.m_decode__typefrom_data(Parameter<T.Type>.value(`type`).wrapAsGeneric(), Parameter<Data>.value(`data`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for decode<T: Decodable>(_ type: T.Type, from data: Data). Use given")
-			Failure("Stub return value not specified for decode<T: Decodable>(_ type: T.Type, from data: Data). Use given")
+        let method = MethodType.m_decode__typefrom_data(Parameter<T.Type>.value(`type`).wrapAsGeneric(), Parameter<Data>.value(`data`))
+		let stringName = "decode<T: Decodable>(_ type: T.Type, from data: Data)"
+		return registry.invoke(method, of: (T).self, named: stringName) {
+			($0 as? (T.Type, Data) -> Void)?(`type`, `data`)
 		}
-		return __value
     }
 
     open func test<FOO>(_ type: FOO.Type) -> Int {
-        registry.addInvocation(.m_test__type(Parameter<FOO.Type>.value(`type`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_test__type(Parameter<FOO.Type>.value(`type`).wrapAsGeneric())) as? (FOO.Type) -> Void
-		perform?(`type`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_test__type(Parameter<FOO.Type>.value(`type`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for test<FOO>(_ type: FOO.Type). Use given")
-			Failure("Stub return value not specified for test<FOO>(_ type: FOO.Type). Use given")
+        let method = MethodType.m_test__type(Parameter<FOO.Type>.value(`type`).wrapAsGeneric())
+		let stringName = "test<FOO>(_ type: FOO.Type)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (FOO.Type) -> Void)?(`type`)
 		}
-		return __value
     }
 
 
@@ -3085,17 +2848,11 @@ open class HistorySectionMapperTypeMock: HistorySectionMapperType, Mock {
 
 
     open func map<T: DateSortable>(_ items: [T]) -> [(key: String, items: [T])] {
-        registry.addInvocation(.m_map__items(Parameter<[T]>.value(`items`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_map__items(Parameter<[T]>.value(`items`).wrapAsGeneric())) as? ([T]) -> Void
-		perform?(`items`)
-		var __value: [(key: String, items: [T])]
-		do {
-		    __value = try registry.methodReturnValue(.m_map__items(Parameter<[T]>.value(`items`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for map<T: DateSortable>(_ items: [T]). Use given")
-			Failure("Stub return value not specified for map<T: DateSortable>(_ items: [T]). Use given")
+        let method = MethodType.m_map__items(Parameter<[T]>.value(`items`).wrapAsGeneric())
+		let stringName = "map<T: DateSortable>(_ items: [T])"
+		return registry.invoke(method, of: ([(key: String, items: [T])]).self, named: stringName) {
+			($0 as? ([T]) -> Void)?(`items`)
 		}
-		return __value
     }
 
 
@@ -3202,23 +2959,19 @@ open class InoutProtocolMock: InoutProtocol, Mock {
 
 
     open func passThisAsInOut(value: inout URLRequest) {
-        registry.addInvocation(.m_passThisAsInOut__value_value(Parameter<URLRequest>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_passThisAsInOut__value_value(Parameter<URLRequest>.value(`value`))) as? (inout URLRequest) -> Void
-		perform?(&`value`)
+        let method = MethodType.m_passThisAsInOut__value_value(Parameter<URLRequest>.value(`value`))
+		let stringName = "passThisAsInOut(value: inout URLRequest)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (inout URLRequest) -> Void)?(&`value`)
+		}
     }
 
     open func returnAndInOut(value: inout Int) -> String {
-        registry.addInvocation(.m_returnAndInOut__value_value(Parameter<Int>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_returnAndInOut__value_value(Parameter<Int>.value(`value`))) as? (inout Int) -> Void
-		perform?(&`value`)
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_returnAndInOut__value_value(Parameter<Int>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for returnAndInOut(value: inout Int). Use given")
-			Failure("Stub return value not specified for returnAndInOut(value: inout Int). Use given")
+        let method = MethodType.m_returnAndInOut__value_value(Parameter<Int>.value(`value`))
+		let stringName = "returnAndInOut(value: inout Int)"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? (inout Int) -> Void)?(&`value`)
 		}
-		return __value
     }
 
 
@@ -3336,15 +3089,19 @@ open class NonSwiftProtocolMock: NSObject, NonSwiftProtocol, Mock {
 
 
     open func returnNoting() {
-        registry.addInvocation(.m_returnNoting)
-		let perform = registry.methodPerformValue(.m_returnNoting) as? () -> Void
-		perform?()
+        let method = MethodType.m_returnNoting
+		let stringName = "returnNoting()"
+		return registry.invoke(method, named: stringName) {
+			($0 as? () -> Void)?()
+		}
     }
 
     open func someMethod() {
-        registry.addInvocation(.m_someMethod)
-		let perform = registry.methodPerformValue(.m_someMethod) as? () -> Void
-		perform?()
+        let method = MethodType.m_someMethod
+		let stringName = "someMethod()"
+		return registry.invoke(method, named: stringName) {
+			($0 as? () -> Void)?()
+		}
     }
 
 
@@ -3449,129 +3206,75 @@ open class ProtocolMethodsGenericThatDifferOnlyInReturnTypeMock: ProtocolMethods
 
 
     open func foo<T>(bar: T) -> String {
-        registry.addInvocation(.m_foo__bar_bar_1(Parameter<T>.value(`bar`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_1(Parameter<T>.value(`bar`).wrapAsGeneric())) as? (T) -> Void
-		perform?(`bar`)
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_1(Parameter<T>.value(`bar`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: T). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: T). Use given")
+        let method = MethodType.m_foo__bar_bar_1(Parameter<T>.value(`bar`).wrapAsGeneric())
+		let stringName = "foo<T>(bar: T)"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? (T) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo<T>(bar: T) -> Int {
-        registry.addInvocation(.m_foo__bar_bar_2(Parameter<T>.value(`bar`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_2(Parameter<T>.value(`bar`).wrapAsGeneric())) as? (T) -> Void
-		perform?(`bar`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_2(Parameter<T>.value(`bar`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: T). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: T). Use given")
+        let method = MethodType.m_foo__bar_bar_2(Parameter<T>.value(`bar`).wrapAsGeneric())
+		let stringName = "foo<T>(bar: T)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (T) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo<T>(bar: T) -> Float where T: A {
-        registry.addInvocation(.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())) as? (T) -> Void
-		perform?(`bar`)
-		var __value: Float
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: T). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: T). Use given")
+        let method = MethodType.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())
+		let stringName = "foo<T>(bar: T)"
+		return registry.invoke(method, of: (Float).self, named: stringName) {
+			($0 as? (T) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo<T>(bar: T) -> Float where T: B {
-        registry.addInvocation(.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())) as? (T) -> Void
-		perform?(`bar`)
-		var __value: Float
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: T). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: T). Use given")
+        let method = MethodType.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())
+		let stringName = "foo<T>(bar: T)"
+		return registry.invoke(method, of: (Float).self, named: stringName) {
+			($0 as? (T) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo<T>(bar: T) -> Double where T: B {
-        registry.addInvocation(.m_foo__bar_bar_5(Parameter<T>.value(`bar`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_5(Parameter<T>.value(`bar`).wrapAsGeneric())) as? (T) -> Void
-		perform?(`bar`)
-		var __value: Double
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_5(Parameter<T>.value(`bar`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: T). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: T). Use given")
+        let method = MethodType.m_foo__bar_bar_5(Parameter<T>.value(`bar`).wrapAsGeneric())
+		let stringName = "foo<T>(bar: T)"
+		return registry.invoke(method, of: (Double).self, named: stringName) {
+			($0 as? (T) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo<T>(bar: String) -> Array<T> {
-        registry.addInvocation(.m_foo__bar_bar_6(Parameter<String>.value(`bar`)))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_6(Parameter<String>.value(`bar`))) as? (String) -> Void
-		perform?(`bar`)
-		var __value: Array<T>
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_6(Parameter<String>.value(`bar`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: String). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: String). Use given")
+        let method = MethodType.m_foo__bar_bar_6(Parameter<String>.value(`bar`))
+		let stringName = "foo<T>(bar: String)"
+		return registry.invoke(method, of: (Array<T>).self, named: stringName) {
+			($0 as? (String) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo<T>(bar: String) -> Set<T> {
-        registry.addInvocation(.m_foo__bar_bar_7(Parameter<String>.value(`bar`)))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_7(Parameter<String>.value(`bar`))) as? (String) -> Void
-		perform?(`bar`)
-		var __value: Set<T>
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_7(Parameter<String>.value(`bar`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: String). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: String). Use given")
+        let method = MethodType.m_foo__bar_bar_7(Parameter<String>.value(`bar`))
+		let stringName = "foo<T>(bar: String)"
+		return registry.invoke(method, of: (Set<T>).self, named: stringName) {
+			($0 as? (String) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo<T>(bar: Bool) -> T where T: A {
-        registry.addInvocation(.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`)))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))) as? (Bool) -> Void
-		perform?(`bar`)
-		var __value: T
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: Bool). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: Bool). Use given")
+        let method = MethodType.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))
+		let stringName = "foo<T>(bar: Bool)"
+		return registry.invoke(method, of: (T).self, named: stringName) {
+			($0 as? (Bool) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo<T>(bar: Bool) -> T where T: B {
-        registry.addInvocation(.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`)))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))) as? (Bool) -> Void
-		perform?(`bar`)
-		var __value: T
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo<T>(bar: Bool). Use given")
-			Failure("Stub return value not specified for foo<T>(bar: Bool). Use given")
+        let method = MethodType.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))
+		let stringName = "foo<T>(bar: Bool)"
+		return registry.invoke(method, of: (T).self, named: stringName) {
+			($0 as? (Bool) -> Void)?(`bar`)
 		}
-		return __value
     }
 
 
@@ -3793,31 +3496,19 @@ open class ProtocolMethodsThatDifferOnlyInReturnTypeMock: ProtocolMethodsThatDif
 
 
     open func foo(bar: String) -> String {
-        registry.addInvocation(.m_foo__bar_bar_1(Parameter<String>.value(`bar`)))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_1(Parameter<String>.value(`bar`))) as? (String) -> Void
-		perform?(`bar`)
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_1(Parameter<String>.value(`bar`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo(bar: String). Use given")
-			Failure("Stub return value not specified for foo(bar: String). Use given")
+        let method = MethodType.m_foo__bar_bar_1(Parameter<String>.value(`bar`))
+		let stringName = "foo(bar: String)"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? (String) -> Void)?(`bar`)
 		}
-		return __value
     }
 
     open func foo(bar: String) -> Int {
-        registry.addInvocation(.m_foo__bar_bar_2(Parameter<String>.value(`bar`)))
-		let perform = registry.methodPerformValue(.m_foo__bar_bar_2(Parameter<String>.value(`bar`))) as? (String) -> Void
-		perform?(`bar`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_foo__bar_bar_2(Parameter<String>.value(`bar`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for foo(bar: String). Use given")
-			Failure("Stub return value not specified for foo(bar: String). Use given")
+        let method = MethodType.m_foo__bar_bar_2(Parameter<String>.value(`bar`))
+		let stringName = "foo(bar: String)"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? (String) -> Void)?(`bar`)
 		}
-		return __value
     }
 
 
@@ -3951,17 +3642,11 @@ open class ProtocolWithAssociatedTypeMock<T>: ProtocolWithAssociatedType, Mock w
 
 
     open func methodWithType(t: T) -> Bool {
-        registry.addInvocation(.m_methodWithType__t_t(Parameter<T>.value(`t`)))
-		let perform = registry.methodPerformValue(.m_methodWithType__t_t(Parameter<T>.value(`t`))) as? (T) -> Void
-		perform?(`t`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithType__t_t(Parameter<T>.value(`t`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithType(t: T). Use given")
-			Failure("Stub return value not specified for methodWithType(t: T). Use given")
+        let method = MethodType.m_methodWithType__t_t(Parameter<T>.value(`t`))
+		let stringName = "methodWithType(t: T)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (T) -> Void)?(`t`)
 		}
-		return __value
     }
 
 
@@ -4174,21 +3859,27 @@ open class ProtocolWithClosuresMock: ProtocolWithClosures, Mock {
 
 
     open func methodThatTakes(closure: (Int) -> Int) {
-        registry.addInvocation(.m_methodThatTakes__closure_closure(Parameter<(Int) -> Int>.any))
-		let perform = registry.methodPerformValue(.m_methodThatTakes__closure_closure(Parameter<(Int) -> Int>.any)) as? ((Int) -> Int) -> Void
-		perform?(`closure`)
+        let method = MethodType.m_methodThatTakes__closure_closure(Parameter<(Int) -> Int>.any)
+		let stringName = "methodThatTakes(closure: (Int) -> Int)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? ((Int) -> Int) -> Void)?(`closure`)
+		}
     }
 
     open func methodThatTakesEscaping(closure: @escaping (Int) -> Int) {
-        registry.addInvocation(.m_methodThatTakesEscaping__closure_closure(Parameter<(Int) -> Int>.value(`closure`)))
-		let perform = registry.methodPerformValue(.m_methodThatTakesEscaping__closure_closure(Parameter<(Int) -> Int>.value(`closure`))) as? (@escaping (Int) -> Int) -> Void
-		perform?(`closure`)
+        let method = MethodType.m_methodThatTakesEscaping__closure_closure(Parameter<(Int) -> Int>.value(`closure`))
+		let stringName = "methodThatTakesEscaping(closure: @escaping (Int) -> Int)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (@escaping (Int) -> Int) -> Void)?(`closure`)
+		}
     }
 
     open func methodThatTakesCompletionBlock(completion: (Bool,Error?) -> Void) {
-        registry.addInvocation(.m_methodThatTakesCompletionBlock__completion_completion(Parameter<(Bool,Error?) -> Void>.any))
-		let perform = registry.methodPerformValue(.m_methodThatTakesCompletionBlock__completion_completion(Parameter<(Bool,Error?) -> Void>.any)) as? ((Bool,Error?) -> Void) -> Void
-		perform?(`completion`)
+        let method = MethodType.m_methodThatTakesCompletionBlock__completion_completion(Parameter<(Bool,Error?) -> Void>.any)
+		let stringName = "methodThatTakesCompletionBlock(completion: (Bool,Error?) -> Void)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? ((Bool,Error?) -> Void) -> Void)?(`completion`)
+		}
     }
 
 
@@ -4304,45 +3995,27 @@ open class ProtocolWithConflictingMembersMock: ProtocolWithConflictingMembers, M
 
 
     open func method(withLabel value: Int) -> Bool {
-        registry.addInvocation(.m_method__withLabel_value(Parameter<Int>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_method__withLabel_value(Parameter<Int>.value(`value`))) as? (Int) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_method__withLabel_value(Parameter<Int>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for method(withLabel value: Int). Use given")
-			Failure("Stub return value not specified for method(withLabel value: Int). Use given")
+        let method = MethodType.m_method__withLabel_value(Parameter<Int>.value(`value`))
+		let stringName = "method(withLabel value: Int)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`value`)
 		}
-		return __value
     }
 
     open func method(_ value: Int) -> Bool {
-        registry.addInvocation(.m_method__value(Parameter<Int>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_method__value(Parameter<Int>.value(`value`))) as? (Int) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_method__value(Parameter<Int>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for method(_ value: Int). Use given")
-			Failure("Stub return value not specified for method(_ value: Int). Use given")
+        let method = MethodType.m_method__value(Parameter<Int>.value(`value`))
+		let stringName = "method(_ value: Int)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`value`)
 		}
-		return __value
     }
 
     open func method(value: Int) -> Bool {
-        registry.addInvocation(.m_method__value_value(Parameter<Int>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_method__value_value(Parameter<Int>.value(`value`))) as? (Int) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_method__value_value(Parameter<Int>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for method(value: Int). Use given")
-			Failure("Stub return value not specified for method(value: Int). Use given")
+        let method = MethodType.m_method__value_value(Parameter<Int>.value(`value`))
+		let stringName = "method(value: Int)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`value`)
 		}
-		return __value
     }
 
 
@@ -4488,30 +4161,19 @@ open class ProtocolWithCustomAttributesMock: ProtocolWithCustomAttributes, Mock 
 
 
     open func methodThatTakesUser(user: UserObject) throws {
-        registry.addInvocation(.m_methodThatTakesUser__user_user(Parameter<UserObject>.value(`user`)))
-		let perform = registry.methodPerformValue(.m_methodThatTakesUser__user_user(Parameter<UserObject>.value(`user`))) as? (UserObject) -> Void
-		perform?(`user`)
-		do {
-		    _ = try registry.methodReturnValue(.m_methodThatTakesUser__user_user(Parameter<UserObject>.value(`user`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
+        let method = MethodType.m_methodThatTakesUser__user_user(Parameter<UserObject>.value(`user`))
+		let stringName = "methodThatTakesUser(user: UserObject)"
+		return try registry.invokeThrowing(method, named: stringName) {
+			($0 as? (UserObject) -> Void)?(`user`)
 		}
     }
 
     open func methodThatTakesArrayOfUsers(array: [UserObject]) -> Int {
-        registry.addInvocation(.m_methodThatTakesArrayOfUsers__array_array(Parameter<[UserObject]>.value(`array`)))
-		let perform = registry.methodPerformValue(.m_methodThatTakesArrayOfUsers__array_array(Parameter<[UserObject]>.value(`array`))) as? ([UserObject]) -> Void
-		perform?(`array`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodThatTakesArrayOfUsers__array_array(Parameter<[UserObject]>.value(`array`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodThatTakesArrayOfUsers(array: [UserObject]). Use given")
-			Failure("Stub return value not specified for methodThatTakesArrayOfUsers(array: [UserObject]). Use given")
+        let method = MethodType.m_methodThatTakesArrayOfUsers__array_array(Parameter<[UserObject]>.value(`array`))
+		let stringName = "methodThatTakesArrayOfUsers(array: [UserObject])"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? ([UserObject]) -> Void)?(`array`)
 		}
-		return __value
     }
 
 
@@ -4638,17 +4300,11 @@ open class ProtocolWithDeprecatedMembersMock: ProtocolWithDeprecatedMembers, Moc
 
 
     open func method(_ value: Int) -> Bool {
-        registry.addInvocation(.m_method__value(Parameter<Int>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_method__value(Parameter<Int>.value(`value`))) as? (Int) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_method__value(Parameter<Int>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for method(_ value: Int). Use given")
-			Failure("Stub return value not specified for method(_ value: Int). Use given")
+        let method = MethodType.m_method__value(Parameter<Int>.value(`value`))
+		let stringName = "method(_ value: Int)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`value`)
 		}
-		return __value
     }
 
 
@@ -4762,16 +4418,11 @@ open class ProtocolWithGenericConstraintsMock<ContainedType>: ProtocolWithGeneri
 
 
     open func extractString<U: CustomStringConvertible>() -> String? where ContainedType == Optional<U> {
-        registry.addInvocation(.m_extractString)
-		let perform = registry.methodPerformValue(.m_extractString) as? () -> Void
-		perform?()
-		var __value: String? = nil
-		do {
-		    __value = try registry.methodReturnValue(.m_extractString).casted()
-		} catch {
-			// do nothing
+        let method = MethodType.m_extractString
+		let stringName = "extractString<U: CustomStringConvertible>()"
+		return registry.invoke(method, of: (String?).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
     }
 
 
@@ -4885,31 +4536,19 @@ open class ProtocolWithGenericMethodsMock: ProtocolWithGenericMethods, Mock {
 
 
     open func methodWithGeneric<T>(lhs: T, rhs: T) -> Bool {
-        registry.addInvocation(.m_methodWithGeneric__lhs_lhsrhs_rhs(Parameter<T>.value(`lhs`).wrapAsGeneric(), Parameter<T>.value(`rhs`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_methodWithGeneric__lhs_lhsrhs_rhs(Parameter<T>.value(`lhs`).wrapAsGeneric(), Parameter<T>.value(`rhs`).wrapAsGeneric())) as? (T, T) -> Void
-		perform?(`lhs`, `rhs`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithGeneric__lhs_lhsrhs_rhs(Parameter<T>.value(`lhs`).wrapAsGeneric(), Parameter<T>.value(`rhs`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithGeneric<T>(lhs: T, rhs: T). Use given")
-			Failure("Stub return value not specified for methodWithGeneric<T>(lhs: T, rhs: T). Use given")
+        let method = MethodType.m_methodWithGeneric__lhs_lhsrhs_rhs(Parameter<T>.value(`lhs`).wrapAsGeneric(), Parameter<T>.value(`rhs`).wrapAsGeneric())
+		let stringName = "methodWithGeneric<T>(lhs: T, rhs: T)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (T, T) -> Void)?(`lhs`, `rhs`)
 		}
-		return __value
     }
 
     open func methodWithGenericConstraint<U>(param: [U]) -> U where U: Equatable {
-        registry.addInvocation(.m_methodWithGenericConstraint__param_param(Parameter<[U]>.value(`param`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_methodWithGenericConstraint__param_param(Parameter<[U]>.value(`param`).wrapAsGeneric())) as? ([U]) -> Void
-		perform?(`param`)
-		var __value: U
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithGenericConstraint__param_param(Parameter<[U]>.value(`param`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithGenericConstraint<U>(param: [U]). Use given")
-			Failure("Stub return value not specified for methodWithGenericConstraint<U>(param: [U]). Use given")
+        let method = MethodType.m_methodWithGenericConstraint__param_param(Parameter<[U]>.value(`param`).wrapAsGeneric())
+		let stringName = "methodWithGenericConstraint<U>(param: [U])"
+		return registry.invoke(method, of: (U).self, named: stringName) {
+			($0 as? ([U]) -> Void)?(`param`)
 		}
-		return __value
     }
 
 
@@ -5037,17 +4676,11 @@ open class ProtocolWithGenericMethodsNestedMock: ProtocolWithGenericMethodsNeste
 
 
     open func methodWithGeneric<T>(resource: Resource<T>) -> Observable<Response<T>> {
-        registry.addInvocation(.m_methodWithGeneric__resource_resource(Parameter<Resource<T>>.value(`resource`).wrapAsGeneric()))
-		let perform = registry.methodPerformValue(.m_methodWithGeneric__resource_resource(Parameter<Resource<T>>.value(`resource`).wrapAsGeneric())) as? (Resource<T>) -> Void
-		perform?(`resource`)
-		var __value: Observable<Response<T>>
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithGeneric__resource_resource(Parameter<Resource<T>>.value(`resource`).wrapAsGeneric())).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithGeneric<T>(resource: Resource<T>). Use given")
-			Failure("Stub return value not specified for methodWithGeneric<T>(resource: Resource<T>). Use given")
+        let method = MethodType.m_methodWithGeneric__resource_resource(Parameter<Resource<T>>.value(`resource`).wrapAsGeneric())
+		let stringName = "methodWithGeneric<T>(resource: Resource<T>)"
+		return registry.invoke(method, of: (Observable<Response<T>>).self, named: stringName) {
+			($0 as? (Resource<T>) -> Void)?(`resource`)
 		}
-		return __value
     }
 
 
@@ -5316,21 +4949,27 @@ open class ProtocolWithPropoertiesMock: ProtocolWithPropoerties, Mock, StaticMoc
 
 
     public static func defaultEmail(_ newValue: String!) {
-        registry.addInvocation(.sm_defaultEmail__newValue(Parameter<String?>.value(`newValue`)))
-		let perform = registry.methodPerformValue(.sm_defaultEmail__newValue(Parameter<String?>.value(`newValue`))) as? (String?) -> Void
-		perform?(`newValue`)
+        let method = StaticMethodType.sm_defaultEmail__newValue(Parameter<String?>.value(`newValue`))
+		let stringName = "defaultEmail(_ newValue: String!)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String?) -> Void)?(`newValue`)
+		}
     }
 
     open func name(_ newValue: String) {
-        registry.addInvocation(.m_name__newValue(Parameter<String>.value(`newValue`)))
-		let perform = registry.methodPerformValue(.m_name__newValue(Parameter<String>.value(`newValue`))) as? (String) -> Void
-		perform?(`newValue`)
+        let method = MethodType.m_name__newValue(Parameter<String>.value(`newValue`))
+		let stringName = "name(_ newValue: String)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String) -> Void)?(`newValue`)
+		}
     }
 
     open func email(_ newValue: String!) {
-        registry.addInvocation(.m_email__newValue(Parameter<String?>.value(`newValue`)))
-		let perform = registry.methodPerformValue(.m_email__newValue(Parameter<String?>.value(`newValue`))) as? (String?) -> Void
-		perform?(`newValue`)
+        let method = MethodType.m_email__newValue(Parameter<String?>.value(`newValue`))
+		let stringName = "email(_ newValue: String!)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String?) -> Void)?(`newValue`)
+		}
     }
 
     public enum StaticMethodType: MethodTypeProtocol {
@@ -5566,18 +5205,11 @@ open class ProtocolWithStaticMembersMock: ProtocolWithStaticMembers, Mock, Stati
 
 
     public static func staticMethod(param: Int) throws -> Int {
-        registry.addInvocation(.sm_staticMethod__param_param(Parameter<Int>.value(`param`)))
-		let perform = registry.methodPerformValue(.sm_staticMethod__param_param(Parameter<Int>.value(`param`))) as? (Int) -> Void
-		perform?(`param`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.sm_staticMethod__param_param(Parameter<Int>.value(`param`))).casted()
-		} catch MockError.notStubed {
-			Failure("Stub return value not specified for staticMethod(param: Int). Use given")
-		} catch {
-		    throw error
+        let method = StaticMethodType.sm_staticMethod__param_param(Parameter<Int>.value(`param`))
+		let stringName = "staticMethod(param: Int)"
+		return try registry.invokeThrowing(method, of: (Int).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`param`)
 		}
-		return __value
     }
 
     public enum StaticMethodType: MethodTypeProtocol {
@@ -5740,17 +5372,11 @@ open class ProtocolWithSubscriptsMock: ProtocolWithSubscripts, Mock {
 
 
     open func aaa(_ value: Int) -> Bool {
-        registry.addInvocation(.m_aaa__value(Parameter<Int>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_aaa__value(Parameter<Int>.value(`value`))) as? (Int) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_aaa__value(Parameter<Int>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for aaa(_ value: Int). Use given")
-			Failure("Stub return value not specified for aaa(_ value: Int). Use given")
+        let method = MethodType.m_aaa__value(Parameter<Int>.value(`value`))
+		let stringName = "aaa(_ value: Int)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`value`)
 		}
-		return __value
     }
 
     public subscript (_ index: Int) -> String {
@@ -6212,32 +5838,19 @@ open class ProtocolWithThrowingMethodsMock: ProtocolWithThrowingMethods, Mock {
 
 
     open func methodThatThrows() throws {
-        registry.addInvocation(.m_methodThatThrows)
-		let perform = registry.methodPerformValue(.m_methodThatThrows) as? () -> Void
-		perform?()
-		do {
-		    _ = try registry.methodReturnValue(.m_methodThatThrows).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
+        let method = MethodType.m_methodThatThrows
+		let stringName = "methodThatThrows()"
+		return try registry.invokeThrowing(method, named: stringName) {
+			($0 as? () -> Void)?()
 		}
     }
 
     open func methodThatReturnsAndThrows(param: Int) throws -> Bool {
-        registry.addInvocation(.m_methodThatReturnsAndThrows__param_param(Parameter<Int>.value(`param`)))
-		let perform = registry.methodPerformValue(.m_methodThatReturnsAndThrows__param_param(Parameter<Int>.value(`param`))) as? (Int) -> Void
-		perform?(`param`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_methodThatReturnsAndThrows__param_param(Parameter<Int>.value(`param`))).casted()
-		} catch MockError.notStubed {
-			registry.onFatalFailure("Stub return value not specified for methodThatReturnsAndThrows(param: Int). Use given")
-			Failure("Stub return value not specified for methodThatReturnsAndThrows(param: Int). Use given")
-		} catch {
-		    throw error
+        let method = MethodType.m_methodThatReturnsAndThrows__param_param(Parameter<Int>.value(`param`))
+		let stringName = "methodThatReturnsAndThrows(param: Int)"
+		return try registry.invokeThrowing(method, of: (Bool).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`param`)
 		}
-		return __value
     }
 
 
@@ -6366,17 +5979,11 @@ open class ProtocolWithTuplesMock: ProtocolWithTuples, Mock {
 
 
     open func methodThatTakesTuple(tuple: (String,Int)) -> Int {
-        registry.addInvocation(.m_methodThatTakesTuple__tuple_tuple(Parameter<(String,Int)>.value(`tuple`)))
-		let perform = registry.methodPerformValue(.m_methodThatTakesTuple__tuple_tuple(Parameter<(String,Int)>.value(`tuple`))) as? ((String,Int)) -> Void
-		perform?(`tuple`)
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_methodThatTakesTuple__tuple_tuple(Parameter<(String,Int)>.value(`tuple`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodThatTakesTuple(tuple: (String,Int)). Use given")
-			Failure("Stub return value not specified for methodThatTakesTuple(tuple: (String,Int)). Use given")
+        let method = MethodType.m_methodThatTakesTuple__tuple_tuple(Parameter<(String,Int)>.value(`tuple`))
+		let stringName = "methodThatTakesTuple(tuple: (String,Int))"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? ((String,Int)) -> Void)?(`tuple`)
 		}
-		return __value
     }
 
 
@@ -6490,17 +6097,11 @@ open class ProtocolWithWhereAfterDefinitionMock<T>: ProtocolWithWhereAfterDefini
 
 
     open func methodWithType(t: T) -> Bool {
-        registry.addInvocation(.m_methodWithType__t_t(Parameter<T>.value(`t`)))
-		let perform = registry.methodPerformValue(.m_methodWithType__t_t(Parameter<T>.value(`t`))) as? (T) -> Void
-		perform?(`t`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithType__t_t(Parameter<T>.value(`t`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithType(t: T). Use given")
-			Failure("Stub return value not specified for methodWithType(t: T). Use given")
+        let method = MethodType.m_methodWithType__t_t(Parameter<T>.value(`t`))
+		let stringName = "methodWithType(t: T)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (T) -> Void)?(`t`)
 		}
-		return __value
     }
 
 
@@ -6615,107 +6216,67 @@ open class SampleServiceTypeMock: SampleServiceType, Mock {
 
 
     open func serviceName() -> String {
-        registry.addInvocation(.m_serviceName)
-		let perform = registry.methodPerformValue(.m_serviceName) as? () -> Void
-		perform?()
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_serviceName).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for serviceName(). Use given")
-			Failure("Stub return value not specified for serviceName(). Use given")
+        let method = MethodType.m_serviceName
+		let stringName = "serviceName()"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
     }
 
     open func getPoint(from point: Point) -> Point {
-        registry.addInvocation(.m_getPoint__from_point(Parameter<Point>.value(`point`)))
-		let perform = registry.methodPerformValue(.m_getPoint__from_point(Parameter<Point>.value(`point`))) as? (Point) -> Void
-		perform?(`point`)
-		var __value: Point
-		do {
-		    __value = try registry.methodReturnValue(.m_getPoint__from_point(Parameter<Point>.value(`point`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for getPoint(from point: Point). Use given")
-			Failure("Stub return value not specified for getPoint(from point: Point). Use given")
+        let method = MethodType.m_getPoint__from_point(Parameter<Point>.value(`point`))
+		let stringName = "getPoint(from point: Point)"
+		return registry.invoke(method, of: (Point).self, named: stringName) {
+			($0 as? (Point) -> Void)?(`point`)
 		}
-		return __value
     }
 
     open func getPoint(from tuple: (Float,Float)) -> Point {
-        registry.addInvocation(.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`)))
-		let perform = registry.methodPerformValue(.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))) as? ((Float,Float)) -> Void
-		perform?(`tuple`)
-		var __value: Point
-		do {
-		    __value = try registry.methodReturnValue(.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for getPoint(from tuple: (Float,Float)). Use given")
-			Failure("Stub return value not specified for getPoint(from tuple: (Float,Float)). Use given")
+        let method = MethodType.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))
+		let stringName = "getPoint(from tuple: (Float,Float))"
+		return registry.invoke(method, of: (Point).self, named: stringName) {
+			($0 as? ((Float,Float)) -> Void)?(`tuple`)
 		}
-		return __value
     }
 
     open func similarMethodThatDiffersOnType(_ value: Float) -> Bool {
-        registry.addInvocation(.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))) as? (Float) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for similarMethodThatDiffersOnType(_ value: Float). Use given")
-			Failure("Stub return value not specified for similarMethodThatDiffersOnType(_ value: Float). Use given")
+        let method = MethodType.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))
+		let stringName = "similarMethodThatDiffersOnType(_ value: Float)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Float) -> Void)?(`value`)
 		}
-		return __value
     }
 
     open func similarMethodThatDiffersOnType(_ value: Point) -> Bool {
-        registry.addInvocation(.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))) as? (Point) -> Void
-		perform?(`value`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for similarMethodThatDiffersOnType(_ value: Point). Use given")
-			Failure("Stub return value not specified for similarMethodThatDiffersOnType(_ value: Point). Use given")
+        let method = MethodType.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))
+		let stringName = "similarMethodThatDiffersOnType(_ value: Point)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Point) -> Void)?(`value`)
 		}
-		return __value
     }
 
     open func methodWithTypedef(_ scalar: Scalar) {
-        registry.addInvocation(.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`)))
-		let perform = registry.methodPerformValue(.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`))) as? (Scalar) -> Void
-		perform?(`scalar`)
+        let method = MethodType.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`))
+		let stringName = "methodWithTypedef(_ scalar: Scalar)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (Scalar) -> Void)?(`scalar`)
+		}
     }
 
     open func methodWithClosures(success function: LinearFunction) -> ClosureFabric {
-        registry.addInvocation(.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`)))
-		let perform = registry.methodPerformValue(.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))) as? (LinearFunction) -> Void
-		perform?(`function`)
-		var __value: ClosureFabric
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithClosures(success function: LinearFunction). Use given")
-			Failure("Stub return value not specified for methodWithClosures(success function: LinearFunction). Use given")
+        let method = MethodType.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))
+		let stringName = "methodWithClosures(success function: LinearFunction)"
+		return registry.invoke(method, of: (ClosureFabric).self, named: stringName) {
+			($0 as? (LinearFunction) -> Void)?(`function`)
 		}
-		return __value
     }
 
     open func methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?) -> ((Int) -> Void) {
-        registry.addInvocation(.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`)))
-		let perform = registry.methodPerformValue(.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))) as? (((Scalar,Scalar) -> Scalar)?) -> Void
-		perform?(`function`)
-		var __value: (Int) -> Void
-		do {
-		    __value = try registry.methodReturnValue(.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?). Use given")
-			Failure("Stub return value not specified for methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?). Use given")
+        let method = MethodType.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))
+		let stringName = "methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?)"
+		return registry.invoke(method, of: ((Int) -> Void).self, named: stringName) {
+			($0 as? (((Scalar,Scalar) -> Scalar)?) -> Void)?(`function`)
 		}
-		return __value
     }
 
 
@@ -6967,83 +6528,52 @@ open class SelfConstrainedProtocolMock: SelfConstrainedProtocol, Mock, StaticMoc
 
     public static func construct(param value: Int) -> Self {
         func _wrapped<__Self__>() -> __Self__ {
-		registry.addInvocation(.sm_construct__param_value(Parameter<Int>.value(`value`)))
-		let perform = registry.methodPerformValue(.sm_construct__param_value(Parameter<Int>.value(`value`))) as? (Int) -> Void
-		perform?(`value`)
-		var __value: __Self__
-		do {
-		    __value = try registry.methodReturnValue(.sm_construct__param_value(Parameter<Int>.value(`value`))).casted()
-		} catch {
-			Failure("Stub return value not specified for construct(param value: Int). Use given")
+		let method = StaticMethodType.sm_construct__param_value(Parameter<Int>.value(`value`))
+		let stringName = "construct(param value: Int)"
+		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+			($0 as? (Int) -> Void)?(`value`)
 		}
-		return __value
 		}
 		return _wrapped()
     }
 
     open func methodReturningSelf() -> Self {
         func _wrapped<__Self__>() -> __Self__ {
-		registry.addInvocation(.m_methodReturningSelf)
-		let perform = registry.methodPerformValue(.m_methodReturningSelf) as? () -> Void
-		perform?()
-		var __value: __Self__
-		do {
-		    __value = try registry.methodReturnValue(.m_methodReturningSelf).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for methodReturningSelf(). Use given")
-			Failure("Stub return value not specified for methodReturningSelf(). Use given")
+		let method = MethodType.m_methodReturningSelf
+		let stringName = "methodReturningSelf()"
+		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
 		}
 		return _wrapped()
     }
 
     open func compare(with other: SelfConstrainedProtocolMock) -> Bool {
-        registry.addInvocation(.m_compare__with_other(Parameter<SelfConstrainedProtocolMock>.value(`other`)))
-		let perform = registry.methodPerformValue(.m_compare__with_other(Parameter<SelfConstrainedProtocolMock>.value(`other`))) as? (SelfConstrainedProtocolMock) -> Void
-		perform?(`other`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_compare__with_other(Parameter<SelfConstrainedProtocolMock>.value(`other`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for compare(with other: SelfConstrainedProtocolMock). Use given")
-			Failure("Stub return value not specified for compare(with other: SelfConstrainedProtocolMock). Use given")
+        let method = MethodType.m_compare__with_other(Parameter<SelfConstrainedProtocolMock>.value(`other`))
+		let stringName = "compare(with other: SelfConstrainedProtocolMock)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (SelfConstrainedProtocolMock) -> Void)?(`other`)
 		}
-		return __value
     }
 
     open func genericMethodWithNestedSelf<T>(param: Int, second: T, other: (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)) -> Self {
         func _wrapped<__Self__>() -> __Self__ {
-		registry.addInvocation(.m_genericMethodWithNestedSelf__param_paramsecond_secondother_other(Parameter<Int>.value(`param`), Parameter<T>.value(`second`).wrapAsGeneric(), Parameter<(SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)>.value(`other`)))
-		let perform = registry.methodPerformValue(.m_genericMethodWithNestedSelf__param_paramsecond_secondother_other(Parameter<Int>.value(`param`), Parameter<T>.value(`second`).wrapAsGeneric(), Parameter<(SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)>.value(`other`))) as? (Int, T, (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)) -> Void
-		perform?(`param`, `second`, `other`)
-		var __value: __Self__
-		do {
-		    __value = try registry.methodReturnValue(.m_genericMethodWithNestedSelf__param_paramsecond_secondother_other(Parameter<Int>.value(`param`), Parameter<T>.value(`second`).wrapAsGeneric(), Parameter<(SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)>.value(`other`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for genericMethodWithNestedSelf<T>(param: Int, second: T, other: (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)). Use given")
-			Failure("Stub return value not specified for genericMethodWithNestedSelf<T>(param: Int, second: T, other: (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)). Use given")
+		let method = MethodType.m_genericMethodWithNestedSelf__param_paramsecond_secondother_other(Parameter<Int>.value(`param`), Parameter<T>.value(`second`).wrapAsGeneric(), Parameter<(SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)>.value(`other`))
+		let stringName = "genericMethodWithNestedSelf<T>(param: Int, second: T, other: (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock))"
+		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+			($0 as? (Int, T, (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)) -> Void)?(`param`, `second`, `other`)
 		}
-		return __value
 		}
 		return _wrapped()
     }
 
     open func configure(with secret: String) throws -> Self {
         func _wrapped<__Self__>() throws -> __Self__ {
-		registry.addInvocation(.m_configure__with_secret(Parameter<String>.value(`secret`)))
-		let perform = registry.methodPerformValue(.m_configure__with_secret(Parameter<String>.value(`secret`))) as? (String) -> Void
-		perform?(`secret`)
-		var __value: __Self__
-		do {
-		    __value = try registry.methodReturnValue(.m_configure__with_secret(Parameter<String>.value(`secret`))).casted()
-		} catch MockError.notStubed {
-			registry.onFatalFailure("Stub return value not specified for configure(with secret: String). Use given")
-			Failure("Stub return value not specified for configure(with secret: String). Use given")
-		} catch {
-		    throw error
+		let method = MethodType.m_configure__with_secret(Parameter<String>.value(`secret`))
+		let stringName = "configure(with secret: String)"
+		return try registry.invokeThrowing(method, of: (__Self__).self, named: stringName) {
+			($0 as? (String) -> Void)?(`secret`)
 		}
-		return __value
 		}
 		return try _wrapped()
     }
@@ -7315,93 +6845,67 @@ open class ShouldAllowNoStubDefinedMock: ShouldAllowNoStubDefined, Mock, StaticM
 
 
     public static func voidMethod(_ key: String) {
-        registry.addInvocation(.sm_voidMethod__key(Parameter<String>.value(`key`)))
-		let perform = registry.methodPerformValue(.sm_voidMethod__key(Parameter<String>.value(`key`))) as? (String) -> Void
-		perform?(`key`)
+        let method = StaticMethodType.sm_voidMethod__key(Parameter<String>.value(`key`))
+		let stringName = "voidMethod(_ key: String)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String) -> Void)?(`key`)
+		}
     }
 
     public static func throwingVoidMethod(_ key: String) throws {
-        registry.addInvocation(.sm_throwingVoidMethod__key(Parameter<String>.value(`key`)))
-		let perform = registry.methodPerformValue(.sm_throwingVoidMethod__key(Parameter<String>.value(`key`))) as? (String) -> Void
-		perform?(`key`)
-		do {
-		    _ = try registry.methodReturnValue(.sm_throwingVoidMethod__key(Parameter<String>.value(`key`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
+        let method = StaticMethodType.sm_throwingVoidMethod__key(Parameter<String>.value(`key`))
+		let stringName = "throwingVoidMethod(_ key: String)"
+		return try registry.invokeThrowing(method, named: stringName) {
+			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     public static func optionalMethod(_ key: String) -> Int? {
-        registry.addInvocation(.sm_optionalMethod__key(Parameter<String>.value(`key`)))
-		let perform = registry.methodPerformValue(.sm_optionalMethod__key(Parameter<String>.value(`key`))) as? (String) -> Void
-		perform?(`key`)
-		var __value: Int? = nil
-		do {
-		    __value = try registry.methodReturnValue(.sm_optionalMethod__key(Parameter<String>.value(`key`))).casted()
-		} catch {
-			// do nothing
+        let method = StaticMethodType.sm_optionalMethod__key(Parameter<String>.value(`key`))
+		let stringName = "optionalMethod(_ key: String)"
+		return registry.invoke(method, of: (Int?).self, named: stringName) {
+			($0 as? (String) -> Void)?(`key`)
 		}
-		return __value
     }
 
     public static func optionalThrowingMethod(_ key: String) -> Int? {
-        registry.addInvocation(.sm_optionalThrowingMethod__key(Parameter<String>.value(`key`)))
-		let perform = registry.methodPerformValue(.sm_optionalThrowingMethod__key(Parameter<String>.value(`key`))) as? (String) -> Void
-		perform?(`key`)
-		var __value: Int? = nil
-		do {
-		    __value = try registry.methodReturnValue(.sm_optionalThrowingMethod__key(Parameter<String>.value(`key`))).casted()
-		} catch {
-			// do nothing
+        let method = StaticMethodType.sm_optionalThrowingMethod__key(Parameter<String>.value(`key`))
+		let stringName = "optionalThrowingMethod(_ key: String)"
+		return registry.invoke(method, of: (Int?).self, named: stringName) {
+			($0 as? (String) -> Void)?(`key`)
 		}
-		return __value
     }
 
     open func voidMethod(_ key: String) {
-        registry.addInvocation(.m_voidMethod__key(Parameter<String>.value(`key`)))
-		let perform = registry.methodPerformValue(.m_voidMethod__key(Parameter<String>.value(`key`))) as? (String) -> Void
-		perform?(`key`)
+        let method = MethodType.m_voidMethod__key(Parameter<String>.value(`key`))
+		let stringName = "voidMethod(_ key: String)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String) -> Void)?(`key`)
+		}
     }
 
     open func throwingVoidMethod(_ key: String) throws {
-        registry.addInvocation(.m_throwingVoidMethod__key(Parameter<String>.value(`key`)))
-		let perform = registry.methodPerformValue(.m_throwingVoidMethod__key(Parameter<String>.value(`key`))) as? (String) -> Void
-		perform?(`key`)
-		do {
-		    _ = try registry.methodReturnValue(.m_throwingVoidMethod__key(Parameter<String>.value(`key`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
+        let method = MethodType.m_throwingVoidMethod__key(Parameter<String>.value(`key`))
+		let stringName = "throwingVoidMethod(_ key: String)"
+		return try registry.invokeThrowing(method, named: stringName) {
+			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     open func optionalMethod(_ key: String) -> Int? {
-        registry.addInvocation(.m_optionalMethod__key(Parameter<String>.value(`key`)))
-		let perform = registry.methodPerformValue(.m_optionalMethod__key(Parameter<String>.value(`key`))) as? (String) -> Void
-		perform?(`key`)
-		var __value: Int? = nil
-		do {
-		    __value = try registry.methodReturnValue(.m_optionalMethod__key(Parameter<String>.value(`key`))).casted()
-		} catch {
-			// do nothing
+        let method = MethodType.m_optionalMethod__key(Parameter<String>.value(`key`))
+		let stringName = "optionalMethod(_ key: String)"
+		return registry.invoke(method, of: (Int?).self, named: stringName) {
+			($0 as? (String) -> Void)?(`key`)
 		}
-		return __value
     }
 
     open func optionalThrowingMethod(_ key: String) -> Int? {
-        registry.addInvocation(.m_optionalThrowingMethod__key(Parameter<String>.value(`key`)))
-		let perform = registry.methodPerformValue(.m_optionalThrowingMethod__key(Parameter<String>.value(`key`))) as? (String) -> Void
-		perform?(`key`)
-		var __value: Int? = nil
-		do {
-		    __value = try registry.methodReturnValue(.m_optionalThrowingMethod__key(Parameter<String>.value(`key`))).casted()
-		} catch {
-			// do nothing
+        let method = MethodType.m_optionalThrowingMethod__key(Parameter<String>.value(`key`))
+		let stringName = "optionalThrowingMethod(_ key: String)"
+		return registry.invoke(method, of: (Int?).self, named: stringName) {
+			($0 as? (String) -> Void)?(`key`)
 		}
-		return __value
     }
 
     public subscript (_ x: Int) -> Int? {
@@ -7735,50 +7239,35 @@ open class SimpleProtocolThatInheritsOtherProtocolsMock: SimpleProtocolThatInher
 
 
     open func simpleMethod() {
-        registry.addInvocation(.m_simpleMethod)
-		let perform = registry.methodPerformValue(.m_simpleMethod) as? () -> Void
-		perform?()
+        let method = MethodType.m_simpleMethod
+		let stringName = "simpleMethod()"
+		return registry.invoke(method, named: stringName) {
+			($0 as? () -> Void)?()
+		}
     }
 
     open func simpleMehtodThatReturns() -> Int {
-        registry.addInvocation(.m_simpleMehtodThatReturns)
-		let perform = registry.methodPerformValue(.m_simpleMehtodThatReturns) as? () -> Void
-		perform?()
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_simpleMehtodThatReturns).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for simpleMehtodThatReturns(). Use given")
-			Failure("Stub return value not specified for simpleMehtodThatReturns(). Use given")
+        let method = MethodType.m_simpleMehtodThatReturns
+		let stringName = "simpleMehtodThatReturns()"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
     }
 
     open func simpleMehtodThatReturns(param: String) -> String {
-        registry.addInvocation(.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`)))
-		let perform = registry.methodPerformValue(.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))) as? (String) -> Void
-		perform?(`param`)
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for simpleMehtodThatReturns(param: String). Use given")
-			Failure("Stub return value not specified for simpleMehtodThatReturns(param: String). Use given")
+        let method = MethodType.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))
+		let stringName = "simpleMehtodThatReturns(param: String)"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? (String) -> Void)?(`param`)
 		}
-		return __value
     }
 
     open func simpleMehtodThatReturns(optionalParam: String?) -> String? {
-        registry.addInvocation(.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`)))
-		let perform = registry.methodPerformValue(.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))) as? (String?) -> Void
-		perform?(`optionalParam`)
-		var __value: String? = nil
-		do {
-		    __value = try registry.methodReturnValue(.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))).casted()
-		} catch {
-			// do nothing
+        let method = MethodType.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))
+		let stringName = "simpleMehtodThatReturns(optionalParam: String?)"
+		return registry.invoke(method, of: (String?).self, named: stringName) {
+			($0 as? (String?) -> Void)?(`optionalParam`)
 		}
-		return __value
     }
 
 
@@ -7982,59 +7471,35 @@ open class SimpleProtocolUsingCollectionsMock: SimpleProtocolUsingCollections, M
 
 
     open func getArray() -> [Int] {
-        registry.addInvocation(.m_getArray)
-		let perform = registry.methodPerformValue(.m_getArray) as? () -> Void
-		perform?()
-		var __value: [Int]
-		do {
-		    __value = try registry.methodReturnValue(.m_getArray).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for getArray(). Use given")
-			Failure("Stub return value not specified for getArray(). Use given")
+        let method = MethodType.m_getArray
+		let stringName = "getArray()"
+		return registry.invoke(method, of: ([Int]).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
     }
 
     open func map(array: [String], param: Int) -> [Int: String] {
-        registry.addInvocation(.m_map__array_arrayparam_param(Parameter<[String]>.value(`array`), Parameter<Int>.value(`param`)))
-		let perform = registry.methodPerformValue(.m_map__array_arrayparam_param(Parameter<[String]>.value(`array`), Parameter<Int>.value(`param`))) as? ([String], Int) -> Void
-		perform?(`array`, `param`)
-		var __value: [Int: String]
-		do {
-		    __value = try registry.methodReturnValue(.m_map__array_arrayparam_param(Parameter<[String]>.value(`array`), Parameter<Int>.value(`param`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for map(array: [String], param: Int). Use given")
-			Failure("Stub return value not specified for map(array: [String], param: Int). Use given")
+        let method = MethodType.m_map__array_arrayparam_param(Parameter<[String]>.value(`array`), Parameter<Int>.value(`param`))
+		let stringName = "map(array: [String], param: Int)"
+		return registry.invoke(method, of: ([Int: String]).self, named: stringName) {
+			($0 as? ([String], Int) -> Void)?(`array`, `param`)
 		}
-		return __value
     }
 
     open func use(dictionary: [Int: String]) -> [Int: String] {
-        registry.addInvocation(.m_use__dictionary_dictionary(Parameter<[Int: String]>.value(`dictionary`)))
-		let perform = registry.methodPerformValue(.m_use__dictionary_dictionary(Parameter<[Int: String]>.value(`dictionary`))) as? ([Int: String]) -> Void
-		perform?(`dictionary`)
-		var __value: [Int: String]
-		do {
-		    __value = try registry.methodReturnValue(.m_use__dictionary_dictionary(Parameter<[Int: String]>.value(`dictionary`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for use(dictionary: [Int: String]). Use given")
-			Failure("Stub return value not specified for use(dictionary: [Int: String]). Use given")
+        let method = MethodType.m_use__dictionary_dictionary(Parameter<[Int: String]>.value(`dictionary`))
+		let stringName = "use(dictionary: [Int: String])"
+		return registry.invoke(method, of: ([Int: String]).self, named: stringName) {
+			($0 as? ([Int: String]) -> Void)?(`dictionary`)
 		}
-		return __value
     }
 
     open func verify(set: Set<Int>) -> Bool {
-        registry.addInvocation(.m_verify__set_set(Parameter<Set<Int>>.value(`set`)))
-		let perform = registry.methodPerformValue(.m_verify__set_set(Parameter<Set<Int>>.value(`set`))) as? (Set<Int>) -> Void
-		perform?(`set`)
-		var __value: Bool
-		do {
-		    __value = try registry.methodReturnValue(.m_verify__set_set(Parameter<Set<Int>>.value(`set`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for verify(set: Set<Int>). Use given")
-			Failure("Stub return value not specified for verify(set: Set<Int>). Use given")
+        let method = MethodType.m_verify__set_set(Parameter<Set<Int>>.value(`set`))
+		let stringName = "verify(set: Set<Int>)"
+		return registry.invoke(method, of: (Bool).self, named: stringName) {
+			($0 as? (Set<Int>) -> Void)?(`set`)
 		}
-		return __value
     }
 
 
@@ -8206,17 +7671,11 @@ open class SimpleProtocolWithBothMethodsAndPropertiesMock: SimpleProtocolWithBot
 
 
     open func simpleMethod() -> String {
-        registry.addInvocation(.m_simpleMethod)
-		let perform = registry.methodPerformValue(.m_simpleMethod) as? () -> Void
-		perform?()
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_simpleMethod).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for simpleMethod(). Use given")
-			Failure("Stub return value not specified for simpleMethod(). Use given")
+        let method = MethodType.m_simpleMethod
+		let stringName = "simpleMethod()"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
     }
 
 
@@ -8330,50 +7789,35 @@ open class SimpleProtocolWithMethodsMock: SimpleProtocolWithMethods, Mock {
 
 
     open func simpleMethod() {
-        registry.addInvocation(.m_simpleMethod)
-		let perform = registry.methodPerformValue(.m_simpleMethod) as? () -> Void
-		perform?()
+        let method = MethodType.m_simpleMethod
+		let stringName = "simpleMethod()"
+		return registry.invoke(method, named: stringName) {
+			($0 as? () -> Void)?()
+		}
     }
 
     open func simpleMehtodThatReturns() -> Int {
-        registry.addInvocation(.m_simpleMehtodThatReturns)
-		let perform = registry.methodPerformValue(.m_simpleMehtodThatReturns) as? () -> Void
-		perform?()
-		var __value: Int
-		do {
-		    __value = try registry.methodReturnValue(.m_simpleMehtodThatReturns).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for simpleMehtodThatReturns(). Use given")
-			Failure("Stub return value not specified for simpleMehtodThatReturns(). Use given")
+        let method = MethodType.m_simpleMehtodThatReturns
+		let stringName = "simpleMehtodThatReturns()"
+		return registry.invoke(method, of: (Int).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
     }
 
     open func simpleMehtodThatReturns(param: String) -> String {
-        registry.addInvocation(.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`)))
-		let perform = registry.methodPerformValue(.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))) as? (String) -> Void
-		perform?(`param`)
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for simpleMehtodThatReturns(param: String). Use given")
-			Failure("Stub return value not specified for simpleMehtodThatReturns(param: String). Use given")
+        let method = MethodType.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))
+		let stringName = "simpleMehtodThatReturns(param: String)"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? (String) -> Void)?(`param`)
 		}
-		return __value
     }
 
     open func simpleMehtodThatReturns(optionalParam: String?) -> String? {
-        registry.addInvocation(.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`)))
-		let perform = registry.methodPerformValue(.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))) as? (String?) -> Void
-		perform?(`optionalParam`)
-		var __value: String? = nil
-		do {
-		    __value = try registry.methodReturnValue(.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))).casted()
-		} catch {
-			// do nothing
+        let method = MethodType.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))
+		let stringName = "simpleMehtodThatReturns(optionalParam: String?)"
+		return registry.invoke(method, of: (String?).self, named: stringName) {
+			($0 as? (String?) -> Void)?(`optionalParam`)
 		}
-		return __value
     }
 
 
@@ -8773,27 +8217,35 @@ open class UserNetworkTypeMock: UserNetworkType, Mock {
     public required init(baseUrl: String) { }
 
     open func getUser(for id: String, completion: (User?) -> Void) {
-        registry.addInvocation(.m_getUser__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?) -> Void>.any))
-		let perform = registry.methodPerformValue(.m_getUser__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?) -> Void>.any)) as? (String, (User?) -> Void) -> Void
-		perform?(`id`, `completion`)
+        let method = MethodType.m_getUser__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?) -> Void>.any)
+		let stringName = "getUser(for id: String, completion: (User?) -> Void)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String, (User?) -> Void) -> Void)?(`id`, `completion`)
+		}
     }
 
     open func getUserEscaping(for id: String, completion: @escaping (User?,Error?) -> Void) {
-        registry.addInvocation(.m_getUserEscaping__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?,Error?) -> Void>.value(`completion`)))
-		let perform = registry.methodPerformValue(.m_getUserEscaping__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?,Error?) -> Void>.value(`completion`))) as? (String, @escaping (User?,Error?) -> Void) -> Void
-		perform?(`id`, `completion`)
+        let method = MethodType.m_getUserEscaping__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?,Error?) -> Void>.value(`completion`))
+		let stringName = "getUserEscaping(for id: String, completion: @escaping (User?,Error?) -> Void)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String, @escaping (User?,Error?) -> Void) -> Void)?(`id`, `completion`)
+		}
     }
 
     open func doSomething(prop: @autoclosure () -> String) {
-        registry.addInvocation(.m_doSomething__prop_prop(Parameter<() -> String>.any))
-		let perform = registry.methodPerformValue(.m_doSomething__prop_prop(Parameter<() -> String>.any)) as? (@autoclosure () -> String) -> Void
-		perform?(`prop`())
+        let method = MethodType.m_doSomething__prop_prop(Parameter<() -> String>.any)
+		let stringName = "doSomething(prop: @autoclosure () -> String)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (@autoclosure () -> String) -> Void)?(`prop`())
+		}
     }
 
     open func testDefaultValues(value: String) {
-        registry.addInvocation(.m_testDefaultValues__value_value(Parameter<String>.value(`value`)))
-		let perform = registry.methodPerformValue(.m_testDefaultValues__value_value(Parameter<String>.value(`value`))) as? (String) -> Void
-		perform?(`value`)
+        let method = MethodType.m_testDefaultValues__value_value(Parameter<String>.value(`value`))
+		let stringName = "testDefaultValues(value: String)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String) -> Void)?(`value`)
+		}
     }
 
 
@@ -8920,23 +8372,19 @@ open class UserStorageTypeMock: UserStorageType, Mock {
 
 
     open func surname(for name: String) -> String {
-        registry.addInvocation(.m_surname__for_name(Parameter<String>.value(`name`)))
-		let perform = registry.methodPerformValue(.m_surname__for_name(Parameter<String>.value(`name`))) as? (String) -> Void
-		perform?(`name`)
-		var __value: String
-		do {
-		    __value = try registry.methodReturnValue(.m_surname__for_name(Parameter<String>.value(`name`))).casted()
-		} catch {
-			registry.onFatalFailure("Stub return value not specified for surname(for name: String). Use given")
-			Failure("Stub return value not specified for surname(for name: String). Use given")
+        let method = MethodType.m_surname__for_name(Parameter<String>.value(`name`))
+		let stringName = "surname(for name: String)"
+		return registry.invoke(method, of: (String).self, named: stringName) {
+			($0 as? (String) -> Void)?(`name`)
 		}
-		return __value
     }
 
     open func storeUser(name: String, surname: String) {
-        registry.addInvocation(.m_storeUser__name_namesurname_surname(Parameter<String>.value(`name`), Parameter<String>.value(`surname`)))
-		let perform = registry.methodPerformValue(.m_storeUser__name_namesurname_surname(Parameter<String>.value(`name`), Parameter<String>.value(`surname`))) as? (String, String) -> Void
-		perform?(`name`, `surname`)
+        let method = MethodType.m_storeUser__name_namesurname_surname(Parameter<String>.value(`name`), Parameter<String>.value(`surname`))
+		let stringName = "storeUser(name: String, surname: String)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (String, String) -> Void)?(`name`, `surname`)
+		}
     }
 
 

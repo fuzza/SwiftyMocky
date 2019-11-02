@@ -43,41 +43,35 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
 
 
     open func storeItems(items: [Item]) {
-        registry.addInvocation(.m_storeItems__items_items(Parameter<[Item]>.value(`items`)))
-		let perform = registry.methodPerformValue(.m_storeItems__items_items(Parameter<[Item]>.value(`items`))) as? ([Item]) -> Void
-		perform?(`items`)
+        let method = MethodType.m_storeItems__items_items(Parameter<[Item]>.value(`items`))
+		let stringName = "storeItems(items: [Item])"
+		return registry.invoke(method, named: stringName) {
+			($0 as? ([Item]) -> Void)?(`items`)
+		}
     }
 
     open func storeDetails(details: ItemDetails) {
-        registry.addInvocation(.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`)))
-		let perform = registry.methodPerformValue(.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`))) as? (ItemDetails) -> Void
-		perform?(`details`)
+        let method = MethodType.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`))
+		let stringName = "storeDetails(details: ItemDetails)"
+		return registry.invoke(method, named: stringName) {
+			($0 as? (ItemDetails) -> Void)?(`details`)
+		}
     }
 
     open func storedItems() -> [Item]? {
-        registry.addInvocation(.m_storedItems)
-		let perform = registry.methodPerformValue(.m_storedItems) as? () -> Void
-		perform?()
-		var __value: [Item]? = nil
-		do {
-		    __value = try registry.methodReturnValue(.m_storedItems).casted()
-		} catch {
-			// do nothing
+        let method = MethodType.m_storedItems
+		let stringName = "storedItems()"
+		return registry.invoke(method, of: ([Item]?).self, named: stringName) {
+			($0 as? () -> Void)?()
 		}
-		return __value
     }
 
     open func storedDetails(item: Item) -> ItemDetails? {
-        registry.addInvocation(.m_storedDetails__item_item(Parameter<Item>.value(`item`)))
-		let perform = registry.methodPerformValue(.m_storedDetails__item_item(Parameter<Item>.value(`item`))) as? (Item) -> Void
-		perform?(`item`)
-		var __value: ItemDetails? = nil
-		do {
-		    __value = try registry.methodReturnValue(.m_storedDetails__item_item(Parameter<Item>.value(`item`))).casted()
-		} catch {
-			// do nothing
+        let method = MethodType.m_storedDetails__item_item(Parameter<Item>.value(`item`))
+		let stringName = "storedDetails(item: Item)"
+		return registry.invoke(method, of: (ItemDetails?).self, named: stringName) {
+			($0 as? (Item) -> Void)?(`item`)
 		}
-		return __value
     }
 
 

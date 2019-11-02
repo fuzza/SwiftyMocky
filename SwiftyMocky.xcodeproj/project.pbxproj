@@ -551,6 +551,7 @@
 				C8EF7B7F21FB423A00AFA545 /* TypeWrapper.swift */,
 				C8EF7B8421FB423A00AFA545 /* MethodWrapper.swift */,
 				C8EF7B8021FB423A00AFA545 /* SubscriptWrapper.swift */,
+				C8294EAC2299345C0036BC94 /* Prototyping.h */,
 				C8EF7B8321FB423A00AFA545 /* VariableWrapper.swift */,
 				C8EF7B7E21FB423A00AFA545 /* Main.swifttemplate */,
 			);
@@ -628,7 +629,6 @@
 				CCAFC9F91FAF24EB003F776A /* Classes */,
 				CCAFC9F71FAF24EA003F776A /* Templates */,
 				CCAFC9F11FAF244D003F776A /* SwiftyMocky.h */,
-				C8294EAC2299345C0036BC94 /* Prototyping.h */,
 				CCAFC9F21FAF244D003F776A /* Info.plist */,
 			);
 			path = "SwiftyMocky-Runtime";

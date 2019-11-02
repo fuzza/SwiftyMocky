@@ -299,14 +299,10 @@ class MethodWrapper {
     func stubBody() -> String {
         let body: String = {
             if method.isInitializer || !returnsSelf {
-                return invocation + performCall() + givenValue + throwValue + returnValue
+                return invokeBody()
             } else {
                 return wrappedStubPrefix()
-                    + "\t\t" + invocation
-                    + performCall()
-                    + givenValue
-                    + throwValue
-                    + returnValue
+                    + "\t\t" + invokeBody()
                     + wrappedStubPostfix()
             }
         }()
@@ -691,4 +687,70 @@ class MethodWrapper {
             }()
             return (annotation, methodName, constraints)
     }
+    
+    // MARK: - New
+    
+    func invokeBody() -> String {
+        return """
+        let method = \(fullMethodTypeCall)
+        \t\tlet stringName = "\(stringifiedMethodName)"
+        \t\treturn \(invokeCall) {
+        \t\t\t($0 as? \(performProxyClosureType()))?(\(performProxyClosureArguments))
+        \t\t}
+        """
+    }
+    
+    private var invokeCall: String {
+        let prefix =  method.throws ? "try " : ""
+        return prefix + "registry.\(invokeFuncName)(\(invokeParams))"
+    }
+    
+    private var invokeFuncName: String {
+        let suffix = method.throws ? "Throwing" : ""
+        return "invoke" + suffix
+    }
+    
+    private var invokeParams: String {
+        let returnType: String = returnsSelf ? "__Self__" : "\(TypeWrapper(method.returnTypeName).stripped)"
+        
+        return [
+            "method",
+            method.returnTypeName.isVoid ? nil : "of: (\(returnType)).self",
+            "named: stringName"
+            ]
+            .compactMap { $0 }
+            .joined(separator: ", ")
+    }
+    
+    private var fullMethodTypeCall: String {
+        let prefix = method.isStatic ? "Static" : ""
+        return prefix + "MethodType\(shortMethodTypeCall)"
+    }
+    
+    private var shortMethodTypeCall: String {
+        if method.parameters.isEmpty {
+            return ".\(prototype)"
+        } else {
+            return ".\(prototype)(\(parametersForMethodCall()))"
+        }
+    }
+    
+    private var stringifiedMethodName: String {
+        return method.name.replacingOccurrences(of: "\t", with: " ")
+    }
+    
+    private var performProxyClosureArguments: String {
+        if method.parameters.isEmpty {
+            return ""
+        } else {
+            return method.parameters
+                .map { p in
+                    let wrapped = ParameterWrapper(p)
+                    let isAutolosure = wrapped.justType.hasPrefix("@autoclosure")
+                    return "\(p.inout ? "&" : "")`\(p.name)`\(isAutolosure ? "()" : "")"
+            }
+            .joined(separator: ", ")
+        }
+    }
 }
+
