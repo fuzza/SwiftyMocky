@@ -39,10 +39,7 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
 
     /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
     public func resetMock(_ scopes: MockScope...) {
-        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
-        if scopes.contains(.invocation) { invocations = [] }
-        if scopes.contains(.given) { methodReturnValues = [] }
-        if scopes.contains(.perform) { methodPerformValues = [] }
+        registry.resetMock(scopes)
     }
 
 
@@ -69,7 +66,7 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
     open func storedItems() -> [Item]? {
         let method = MethodType.m_storedItems
 		let stringName = "storedItems()"
-		return registry.invoke(method, of: ([Item]?).self, named: stringName) {
+		return registry.invoke(method, of: ([Item]).self, named: stringName) {
 			($0 as? () -> Void)?()
 		}
     }
@@ -77,7 +74,7 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
     open func storedDetails(item: Item) -> ItemDetails? {
         let method = MethodType.m_storedDetails__item_item(Parameter<Item>.value(`item`))
 		let stringName = "storedDetails(item: Item)"
-		return registry.invoke(method, of: (ItemDetails?).self, named: stringName) {
+		return registry.invoke(method, of: (ItemDetails).self, named: stringName) {
 			($0 as? (Item) -> Void)?(`item`)
 		}
     }

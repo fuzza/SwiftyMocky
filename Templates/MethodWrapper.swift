@@ -651,7 +651,7 @@ class MethodWrapper {
     }
     
     private var invokeParams: String {
-        let returnType: String = returnsSelf ? "__Self__" : "\(TypeWrapper(method.returnTypeName).stripped)"
+        let returnType: String = returnsSelf ? "__Self__" : "\(TypeWrapper(method.returnTypeName).unwrappedReplacingSelf)"
         
         return [
             "method",

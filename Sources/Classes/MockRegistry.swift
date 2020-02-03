@@ -18,13 +18,13 @@ public protocol PerformProtocol: MethodTypeWrapper {
     var performs: Any { get }
 }
 
-public class MockRegistry
+public final class MockRegistry
     <
     MethodType: MethodTypeProtocol,
     Given: GivenProtocol,
     Verify: VerifyProtocol,
     Perform: PerformProtocol
-    >: Mock
+    >
     where
     Given.MethodType == MethodType,
     Verify.MethodType == MethodType,
@@ -45,23 +45,24 @@ public class MockRegistry
     private var methodPerformValues: [Perform] = []
     private var file: StaticString?
     private var line: UInt?
-    
-    public final func clear() {
-        invocations = []
-        methodReturnValues = []
-        methodPerformValues = []
+
+    public func resetMock(_ scopes: [MockScope]) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
     }
     
-    public final func setupMock(file: StaticString, line: UInt) {
+    public func setupMock(file: StaticString, line: UInt) {
         self.file = file
         self.line = line
     }
     
-    public final func given(_ method: Given) {
+    public func given(_ method: Given) {
         methodReturnValues.append(method)
     }
     
-    public final func perform(_ method: Perform) {
+    public func perform(_ method: Perform) {
         methodPerformValues.append(method)
         methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
     }
@@ -71,18 +72,18 @@ public class MockRegistry
         MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
     
-    public final func addInvocation(_ call: MethodType) {
+    public func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
     
-    public final func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+    public func methodReturnValue(_ method: MethodType) throws -> StubProduct {
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
         let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
     
-    public final func methodPerformValue(_ method: MethodType) -> Any? {
+    public func methodPerformValue(_ method: MethodType) -> Any? {
         let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
         return matched?.performs
     }
