@@ -235,47 +235,9 @@ class MethodWrapper {
 
     // Stub
     func stubBody() -> String {
-        let body: String = {
-            guard !method.isInitializer else { return "" }
-            
-            if returnsSelf {
-                return wrappedStubPrefix()
-                    + "\t\t" + invokeBody()
-                    + wrappedStubPostfix()
-            } else {
-                return invokeBody()
-            }
-        }()
+        guard !method.isInitializer else { return "" }
+        let body = invokeBody()
         return replacingSelf(body)
-    }
-
-    func wrappedStubPrefix() -> String {
-        guard !method.isInitializer, returnsSelf else {
-            return ""
-        }
-
-        let throwing: String = {
-            if method.throws {
-                return "throws "
-            } else if method.rethrows {
-                return "rethrows "
-            } else {
-                return ""
-            }
-        }()
-
-        return "func _wrapped<__Self__>() \(throwing)-> __Self__ {\n"
-    }
-
-    func wrappedStubPostfix() -> String {
-        guard !method.isInitializer, returnsSelf else {
-            return ""
-        }
-
-        let throwing: String = (method.throws || method.rethrows) ? "try ": ""
-
-        return "\n\t\t}"
-            + "\n\t\treturn \(throwing)_wrapped()"
     }
 
     // Method Type
@@ -632,9 +594,7 @@ class MethodWrapper {
     
     func invokeBody() -> String {
         return """
-        let method = \(fullMethodTypeCall)
-        \t\tlet stringName = "\(stringifiedMethodName)"
-        \t\treturn \(invokeCall) {
+        return \(invokeCall) {
         \t\t\t($0 as? \(performProxyClosureType()))?(\(performProxyClosureArguments))
         \t\t}
         """
@@ -642,24 +602,12 @@ class MethodWrapper {
     
     private var invokeCall: String {
         let prefix =  method.throws ? "try " : ""
-        return prefix + "registry.\(invokeFuncName)(\(invokeParams))"
+        return prefix + "registry.\(invokeFuncName)(\(fullMethodTypeCall))"
     }
     
     private var invokeFuncName: String {
         let suffix = method.throws ? "Throwing" : ""
         return "invoke" + suffix
-    }
-    
-    private var invokeParams: String {
-        let returnType: String = returnsSelf ? "__Self__" : "\(TypeWrapper(method.returnTypeName).unwrappedReplacingSelf)"
-        
-        return [
-            "method",
-            method.returnTypeName.isVoid ? nil : "of: (\(returnType)).self",
-            "named: stringName"
-            ]
-            .compactMap { $0 }
-            .joined(separator: ", ")
     }
     
     private var fullMethodTypeCall: String {

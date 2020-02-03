@@ -48,33 +48,25 @@ class ItemsRepositoryMock: ItemsRepository, Mock {
 
 
     open func storeItems(items: [Item]) {
-        let method = MethodType.m_storeItems__items_items(Parameter<[Item]>.value(`items`))
-		let stringName = "storeItems(items: [Item])"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_storeItems__items_items(Parameter<[Item]>.value(`items`))) {
 			($0 as? ([Item]) -> Void)?(`items`)
 		}
     }
 
     open func storeDetails(details: ItemDetails) {
-        let method = MethodType.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`))
-		let stringName = "storeDetails(details: ItemDetails)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_storeDetails__details_details(Parameter<ItemDetails>.value(`details`))) {
 			($0 as? (ItemDetails) -> Void)?(`details`)
 		}
     }
 
     open func storedItems() -> [Item]? {
-        let method = MethodType.m_storedItems
-		let stringName = "storedItems()"
-		return registry.invoke(method, of: ([Item]).self, named: stringName) {
+        return registry.invoke(MethodType.m_storedItems) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func storedDetails(item: Item) -> ItemDetails? {
-        let method = MethodType.m_storedDetails__item_item(Parameter<Item>.value(`item`))
-		let stringName = "storedDetails(item: Item)"
-		return registry.invoke(method, of: (ItemDetails).self, named: stringName) {
+        return registry.invoke(MethodType.m_storedDetails__item_item(Parameter<Item>.value(`item`))) {
 			($0 as? (Item) -> Void)?(`item`)
 		}
     }

@@ -83,18 +83,7 @@ public final class MockRegistry
         return product
     }
     
-    public func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
+    // MARK: - Properties
     
     public func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
@@ -113,14 +102,9 @@ public final class MockRegistry
         }
     }
     
-    public func onFatalFailure(_ message: String) {
-        #if Mocky
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
-    }
+    // MARK: - Functions
     
-    public func invoke<T>(_ method: MethodType, of type: T.Type, named: String, onPerform: (Any) -> Void) -> T {
+    public func invoke<T>(_ method: MethodType, named: String = #function, onPerform: (Any) -> Void) -> T {
         spy(method, onPerform)
         
         var __value: T
@@ -135,7 +119,7 @@ public final class MockRegistry
         return __value
     }
     
-    public func invoke<T>(_ method: MethodType, of type: T.Type, named: String, onPerform: (Any) -> Void) -> T? {
+    public func invoke<T>(_ method: MethodType, onPerform: (Any) -> Void) -> T? {
         spy(method, onPerform)
         
         var __value: T? = nil
@@ -147,11 +131,11 @@ public final class MockRegistry
         return __value
     }
     
-    public func invoke(_ method: MethodType, named: String, onPerform: (Any) -> Void) -> Void {
+    public func invoke(_ method: MethodType, onPerform: (Any) -> Void) -> Void {
         spy(method, onPerform)
     }
     
-    public func invokeThrowing<T>(_ method: MethodType, of type: T.Type, named: String, onPerform: (Any) -> Void) throws -> T {
+    public func invokeThrowing<T>(_ method: MethodType, named: String = #function, onPerform: (Any) -> Void) throws -> T {
         spy(method, onPerform)
         
         var __value: T
@@ -168,7 +152,7 @@ public final class MockRegistry
         return __value
     }
     
-    public func invokeThrowing<T>(_ method: MethodType, named: String, onPerform: (Any) -> Void) throws -> T? {
+    public func invokeThrowing<T>(_ method: MethodType, onPerform: (Any) -> Void) throws -> T? {
         spy(method, onPerform)
         
         var __value: T? = nil
@@ -182,7 +166,7 @@ public final class MockRegistry
         return __value
     }
     
-    public func invokeThrowing(_ method: MethodType, named: String, onPerform: (Any) -> Void) throws -> Void {
+    public func invokeThrowing(_ method: MethodType, onPerform: (Any) -> Void) throws -> Void {
         spy(method, onPerform)
         
         do {
@@ -192,6 +176,28 @@ public final class MockRegistry
         } catch {
             throw error
         }
+    }
+    
+    public func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+    
+    // MARK: - Private helpers
+      
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
     }
     
     private func spy(_ method: MethodType, _ onPerform: (Any) -> Void) {

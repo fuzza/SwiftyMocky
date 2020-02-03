@@ -97,25 +97,19 @@ open class AMassiveTestProtocolMock: AMassiveTestProtocol, Mock, StaticMock {
 
 
     public static func methodThatThrows() throws {
-        let method = StaticMethodType.sm_methodThatThrows
-		let stringName = "methodThatThrows()"
-		return try registry.invokeThrowing(method, named: stringName) {
+        return try registry.invokeThrowing(StaticMethodType.sm_methodThatThrows) {
 			($0 as? () -> Void)?()
 		}
     }
 
     public static func methodThatReturnsAndThrows(param: String) throws -> Int {
-        let method = StaticMethodType.sm_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))
-		let stringName = "methodThatReturnsAndThrows(param: String)"
-		return try registry.invokeThrowing(method, of: (Int).self, named: stringName) {
+        return try registry.invokeThrowing(StaticMethodType.sm_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))) {
 			($0 as? (String) -> Void)?(`param`)
 		}
     }
 
     public static func methodThatRethrows(param: (String) throws -> Int) rethrows -> Int {
-        let method = StaticMethodType.sm_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)
-		let stringName = "methodThatRethrows(param: (String) throws -> Int)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(StaticMethodType.sm_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)) {
 			($0 as? ((String) throws -> Int) -> Void)?(`param`)
 		}
     }
@@ -125,25 +119,19 @@ open class AMassiveTestProtocolMock: AMassiveTestProtocol, Mock, StaticMock {
     public required init(_ sth: Int) { }
 
     open func methodThatThrows() throws {
-        let method = MethodType.m_methodThatThrows
-		let stringName = "methodThatThrows()"
-		return try registry.invokeThrowing(method, named: stringName) {
+        return try registry.invokeThrowing(MethodType.m_methodThatThrows) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func methodThatReturnsAndThrows(param: String) throws -> Int {
-        let method = MethodType.m_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))
-		let stringName = "methodThatReturnsAndThrows(param: String)"
-		return try registry.invokeThrowing(method, of: (Int).self, named: stringName) {
+        return try registry.invokeThrowing(MethodType.m_methodThatReturnsAndThrows__param_param(Parameter<String>.value(`param`))) {
 			($0 as? (String) -> Void)?(`param`)
 		}
     }
 
     open func methodThatRethrows(param: (String) throws -> Int) rethrows -> Int {
-        let method = MethodType.m_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)
-		let stringName = "methodThatRethrows(param: (String) throws -> Int)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodThatRethrows__param_param(Parameter<(String) throws -> Int>.any)) {
 			($0 as? ((String) throws -> Int) -> Void)?(`param`)
 		}
     }
@@ -455,9 +443,7 @@ open class AVeryAssociatedProtocolMock<T1,T2>: AVeryAssociatedProtocol, Mock whe
 
 
     open func fetch(for value: T2) -> T1 {
-        let method = MethodType.m_fetch__for_value(Parameter<T2>.value(`value`))
-		let stringName = "fetch(for value: T2)"
-		return registry.invoke(method, of: (T1).self, named: stringName) {
+        return registry.invoke(MethodType.m_fetch__for_value(Parameter<T2>.value(`value`))) {
 			($0 as? (T2) -> Void)?(`value`)
 		}
     }
@@ -593,17 +579,13 @@ open class AVeryGenericProtocolMock: AVeryGenericProtocol, Mock, StaticMock {
 
 
     public static func generic<Q>(lhs: Q, rhs: Q) -> Bool where Q: Equatable {
-        let method = StaticMethodType.sm_generic__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())
-		let stringName = "generic<Q>(lhs: Q, rhs: Q)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(StaticMethodType.sm_generic__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())) {
 			($0 as? (Q, Q) -> Void)?(`lhs`, `rhs`)
 		}
     }
 
     public static func veryConstrained<Q: Sequence>(lhs: Q, rhs: Q) -> Bool where Q: Equatable {
-        let method = StaticMethodType.sm_veryConstrained__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())
-		let stringName = "veryConstrained<Q: Sequence>(lhs: Q, rhs: Q)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(StaticMethodType.sm_veryConstrained__lhs_lhsrhs_rhs(Parameter<Q>.value(`lhs`).wrapAsGeneric(), Parameter<Q>.value(`rhs`).wrapAsGeneric())) {
 			($0 as? (Q, Q) -> Void)?(`lhs`, `rhs`)
 		}
     }
@@ -611,9 +593,7 @@ open class AVeryGenericProtocolMock: AVeryGenericProtocol, Mock, StaticMock {
     public required init<V>(value: V) { }
 
     open func methodConstrained<A,B,C>(param: A) -> (B,C) {
-        let method = MethodType.m_methodConstrained__param_param(Parameter<A>.value(`param`).wrapAsGeneric())
-		let stringName = "methodConstrained<A,B,C>(param: A)"
-		return registry.invoke(method, of: ((B,C)).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodConstrained__param_param(Parameter<A>.value(`param`).wrapAsGeneric())) {
 			($0 as? (A) -> Void)?(`param`)
 		}
     }
@@ -815,113 +795,85 @@ open class AllLiteralsContainerMock: AllLiteralsContainer, Mock {
 
 
     open func methodWithStringParameter(p: String) -> Int {
-        let method = MethodType.m_methodWithStringParameter__p_p(Parameter<String>.value(`p`))
-		let stringName = "methodWithStringParameter(p: String)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithStringParameter__p_p(Parameter<String>.value(`p`))) {
 			($0 as? (String) -> Void)?(`p`)
 		}
     }
 
     open func methodWithOtionalStringParameter(p: String?) -> Int {
-        let method = MethodType.m_methodWithOtionalStringParameter__p_p(Parameter<String?>.value(`p`))
-		let stringName = "methodWithOtionalStringParameter(p: String?)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithOtionalStringParameter__p_p(Parameter<String?>.value(`p`))) {
 			($0 as? (String?) -> Void)?(`p`)
 		}
     }
 
     open func methodWithCustomStringParameter(p: CustomString) -> Int {
-        let method = MethodType.m_methodWithCustomStringParameter__p_p(Parameter<CustomString>.value(`p`))
-		let stringName = "methodWithCustomStringParameter(p: CustomString)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithCustomStringParameter__p_p(Parameter<CustomString>.value(`p`))) {
 			($0 as? (CustomString) -> Void)?(`p`)
 		}
     }
 
     open func methodWithCustomOptionalStringParameter(p: CustomString?) -> Int {
-        let method = MethodType.m_methodWithCustomOptionalStringParameter__p_p(Parameter<CustomString?>.value(`p`))
-		let stringName = "methodWithCustomOptionalStringParameter(p: CustomString?)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithCustomOptionalStringParameter__p_p(Parameter<CustomString?>.value(`p`))) {
 			($0 as? (CustomString?) -> Void)?(`p`)
 		}
     }
 
     open func methodWithIntParameter(p: Int) -> Int {
-        let method = MethodType.m_methodWithIntParameter__p_p(Parameter<Int>.value(`p`))
-		let stringName = "methodWithIntParameter(p: Int)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithIntParameter__p_p(Parameter<Int>.value(`p`))) {
 			($0 as? (Int) -> Void)?(`p`)
 		}
     }
 
     open func methodWithCustomOptionalIntParameter(p: CustomInt?) -> Int {
-        let method = MethodType.m_methodWithCustomOptionalIntParameter__p_p(Parameter<CustomInt?>.value(`p`))
-		let stringName = "methodWithCustomOptionalIntParameter(p: CustomInt?)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithCustomOptionalIntParameter__p_p(Parameter<CustomInt?>.value(`p`))) {
 			($0 as? (CustomInt?) -> Void)?(`p`)
 		}
     }
 
     open func methodWithBool(p: Bool?) -> Int {
-        let method = MethodType.m_methodWithBool__p_p(Parameter<Bool?>.value(`p`))
-		let stringName = "methodWithBool(p: Bool?)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithBool__p_p(Parameter<Bool?>.value(`p`))) {
 			($0 as? (Bool?) -> Void)?(`p`)
 		}
     }
 
     open func methodWithFloat(p: Float?) -> Int {
-        let method = MethodType.m_methodWithFloat__p_p(Parameter<Float?>.value(`p`))
-		let stringName = "methodWithFloat(p: Float?)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithFloat__p_p(Parameter<Float?>.value(`p`))) {
 			($0 as? (Float?) -> Void)?(`p`)
 		}
     }
 
     open func methodWithDouble(p: Double?) -> Int {
-        let method = MethodType.m_methodWithDouble__p_p(Parameter<Double?>.value(`p`))
-		let stringName = "methodWithDouble(p: Double?)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithDouble__p_p(Parameter<Double?>.value(`p`))) {
 			($0 as? (Double?) -> Void)?(`p`)
 		}
     }
 
     open func methodWithArrayOfInt(p: [Int]) -> Int {
-        let method = MethodType.m_methodWithArrayOfInt__p_p(Parameter<[Int]>.value(`p`))
-		let stringName = "methodWithArrayOfInt(p: [Int])"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithArrayOfInt__p_p(Parameter<[Int]>.value(`p`))) {
 			($0 as? ([Int]) -> Void)?(`p`)
 		}
     }
 
     open func methodWithArrayOfOther(p: [SomeClass]) -> Int {
-        let method = MethodType.m_methodWithArrayOfOther__p_p(Parameter<[SomeClass]>.value(`p`))
-		let stringName = "methodWithArrayOfOther(p: [SomeClass])"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithArrayOfOther__p_p(Parameter<[SomeClass]>.value(`p`))) {
 			($0 as? ([SomeClass]) -> Void)?(`p`)
 		}
     }
 
     open func methodWithSetOfInt(p: Set<Int>) -> Int {
-        let method = MethodType.m_methodWithSetOfInt__p_p(Parameter<Set<Int>>.value(`p`))
-		let stringName = "methodWithSetOfInt(p: Set<Int>)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithSetOfInt__p_p(Parameter<Set<Int>>.value(`p`))) {
 			($0 as? (Set<Int>) -> Void)?(`p`)
 		}
     }
 
     open func methodWithOptionalSetOfInt(p: Set<Int>?) -> Int {
-        let method = MethodType.m_methodWithOptionalSetOfInt__p_p(Parameter<Set<Int>?>.value(`p`))
-		let stringName = "methodWithOptionalSetOfInt(p: Set<Int>?)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithOptionalSetOfInt__p_p(Parameter<Set<Int>?>.value(`p`))) {
 			($0 as? (Set<Int>?) -> Void)?(`p`)
 		}
     }
 
     open func methodWithDict(p: [String: SomeClass]) -> Int {
-        let method = MethodType.m_methodWithDict__p_p(Parameter<[String: SomeClass]>.value(`p`))
-		let stringName = "methodWithDict(p: [String: SomeClass])"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithDict__p_p(Parameter<[String: SomeClass]>.value(`p`))) {
 			($0 as? ([String: SomeClass]) -> Void)?(`p`)
 		}
     }
@@ -1283,17 +1235,13 @@ open class AnotherProtocolMock: AnotherProtocol, Mock {
 
 
     open func doSomething<T: ProtocolWithAssociatedType2>(type: T) -> T.ValueType? {
-        let method = MethodType.m_doSomething__type_type(Parameter<T>.value(`type`).wrapAsGeneric())
-		let stringName = "doSomething<T: ProtocolWithAssociatedType2>(type: T)"
-		return registry.invoke(method, of: (T.ValueType).self, named: stringName) {
+        return registry.invoke(MethodType.m_doSomething__type_type(Parameter<T>.value(`type`).wrapAsGeneric())) {
 			($0 as? (T) -> Void)?(`type`)
 		}
     }
 
     open func doSomething2<T: ProtocolWithAssociatedType2>(type: T, withValue: T.ValueType?) {
-        let method = MethodType.m_doSomething2__type_typewithValue_withValue(Parameter<T>.value(`type`).wrapAsGeneric(), Parameter<T.ValueType?>.value(`withValue`).wrapAsGeneric())
-		let stringName = "doSomething2<T: ProtocolWithAssociatedType2>(type: T, withValue: T.ValueType?)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_doSomething2__type_typewithValue_withValue(Parameter<T>.value(`type`).wrapAsGeneric(), Parameter<T.ValueType?>.value(`withValue`).wrapAsGeneric())) {
 			($0 as? (T, T.ValueType?) -> Void)?(`type`, `withValue`)
 		}
     }
@@ -1425,73 +1373,55 @@ open class ComplicatedServiceTypeMock: ComplicatedServiceType, Mock {
 
 
     open func serviceName() -> String {
-        let method = MethodType.m_serviceName
-		let stringName = "serviceName()"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_serviceName) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func aNewWayToSayHooray() {
-        let method = MethodType.m_aNewWayToSayHooray
-		let stringName = "aNewWayToSayHooray()"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_aNewWayToSayHooray) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func getPoint(from point: Point) -> Point {
-        let method = MethodType.m_getPoint__from_point(Parameter<Point>.value(`point`))
-		let stringName = "getPoint(from point: Point)"
-		return registry.invoke(method, of: (Point).self, named: stringName) {
+        return registry.invoke(MethodType.m_getPoint__from_point(Parameter<Point>.value(`point`))) {
 			($0 as? (Point) -> Void)?(`point`)
 		}
     }
 
     open func getPoint(from tuple: (Float,Float)) -> Point {
-        let method = MethodType.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))
-		let stringName = "getPoint(from tuple: (Float,Float))"
-		return registry.invoke(method, of: (Point).self, named: stringName) {
+        return registry.invoke(MethodType.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))) {
 			($0 as? ((Float,Float)) -> Void)?(`tuple`)
 		}
     }
 
     open func similarMethodThatDiffersOnType(_ value: Float) -> Bool {
-        let method = MethodType.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))
-		let stringName = "similarMethodThatDiffersOnType(_ value: Float)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))) {
 			($0 as? (Float) -> Void)?(`value`)
 		}
     }
 
     open func similarMethodThatDiffersOnType(_ value: Point) -> Bool {
-        let method = MethodType.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))
-		let stringName = "similarMethodThatDiffersOnType(_ value: Point)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))) {
 			($0 as? (Point) -> Void)?(`value`)
 		}
     }
 
     open func methodWithTypedef(_ scalar: Scalar) {
-        let method = MethodType.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`))
-		let stringName = "methodWithTypedef(_ scalar: Scalar)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`))) {
 			($0 as? (Scalar) -> Void)?(`scalar`)
 		}
     }
 
     open func methodWithClosures(success function: LinearFunction) -> ClosureFabric {
-        let method = MethodType.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))
-		let stringName = "methodWithClosures(success function: LinearFunction)"
-		return registry.invoke(method, of: (ClosureFabric).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))) {
 			($0 as? (LinearFunction) -> Void)?(`function`)
 		}
     }
 
     open func methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?) -> ((Int) -> Void) {
-        let method = MethodType.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))
-		let stringName = "methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?)"
-		return registry.invoke(method, of: ((Int) -> Void).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))) {
 			($0 as? (((Scalar,Scalar) -> Scalar)?) -> Void)?(`function`)
 		}
     }
@@ -1846,17 +1776,13 @@ open class EdgeCasesGenericsProtocolMock: EdgeCasesGenericsProtocol, Mock {
 
 
     open func sorted<Key, Value>(by key: Mytest<Key, Value>) {
-        let method = MethodType.m_sorted__by_key(Parameter<Mytest<Key, Value>>.value(`key`).wrapAsGeneric())
-		let stringName = "sorted<Key, Value>(by key: Mytest<Key, Value>)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_sorted__by_key(Parameter<Mytest<Key, Value>>.value(`key`).wrapAsGeneric())) {
 			($0 as? (Mytest<Key, Value>) -> Void)?(`key`)
 		}
     }
 
     open func getter<K,V: Sequence,T: Equatable>(swapped key: Mytest<K,V>) -> T {
-        let method = MethodType.m_getter__swapped_key(Parameter<Mytest<K,V>>.value(`key`).wrapAsGeneric())
-		let stringName = "getter<K,V: Sequence,T: Equatable>(swapped key: Mytest<K,V>)"
-		return registry.invoke(method, of: (T).self, named: stringName) {
+        return registry.invoke(MethodType.m_getter__swapped_key(Parameter<Mytest<K,V>>.value(`key`).wrapAsGeneric())) {
 			($0 as? (Mytest<K,V>) -> Void)?(`key`)
 		}
     }
@@ -2061,9 +1987,7 @@ open class FailsWithAutoClosureOnSwift5Mock: FailsWithAutoClosureOnSwift5, Mock 
 
 
     open func connect(_ token: @autoclosure () -> String) -> Bool {
-        let method = MethodType.m_connect__token(Parameter<() -> String>.any)
-		let stringName = "connect(_ token: @autoclosure () -> String)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_connect__token(Parameter<() -> String>.any)) {
 			($0 as? (@autoclosure () -> String) -> Void)?(`token`())
 		}
     }
@@ -2183,25 +2107,19 @@ open class FailsWithKeywordArgumentsMock: FailsWithKeywordArguments, Mock {
 
 
     open func foo(for: String) {
-        let method = MethodType.m_foo__for_for(Parameter<String>.value(`for`))
-		let stringName = "foo(for: String)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_foo__for_for(Parameter<String>.value(`for`))) {
 			($0 as? (String) -> Void)?(`for`)
 		}
     }
 
     open func `throw`(while: String) -> Error {
-        let method = MethodType.m_throw__while_while(Parameter<String>.value(`while`))
-		let stringName = "`throw`(while: String)"
-		return registry.invoke(method, of: (Error).self, named: stringName) {
+        return registry.invoke(MethodType.m_throw__while_while(Parameter<String>.value(`while`))) {
 			($0 as? (String) -> Void)?(`while`)
 		}
     }
 
     open func `return`(do while: String) -> Bool {
-        let method = MethodType.m_return__do_while(Parameter<String>.value(`while`))
-		let stringName = "`return`(do while: String)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_return__do_while(Parameter<String>.value(`while`))) {
 			($0 as? (String) -> Void)?(`while`)
 		}
     }
@@ -2384,50 +2302,31 @@ public final class FailsWithReturnedTypeBeingGenericOfSelfMock: FailsWithReturne
 
 
     public func methodWillReturnSelfTypedArray() -> Array<FailsWithReturnedTypeBeingGenericOfSelfMock>  {
-        func _wrapped<__Self__>() -> __Self__ {
-		let method = MethodType.m_methodWillReturnSelfTypedArray
-		let stringName = "methodWillReturnSelfTypedArray()"
-		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWillReturnSelfTypedArray) {
 			($0 as? () -> Void)?()
 		}
-		}
-		return _wrapped()
     }
 
     public func methodWillReturnSelfTypedArray2() -> [FailsWithReturnedTypeBeingGenericOfSelfMock]  {
-        func _wrapped<__Self__>() -> __Self__ {
-		let method = MethodType.m_methodWillReturnSelfTypedArray2
-		let stringName = "methodWillReturnSelfTypedArray2()"
-		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWillReturnSelfTypedArray2) {
 			($0 as? () -> Void)?()
 		}
-		}
-		return _wrapped()
     }
 
     public func methodWillReturnSelfTypedCustom() -> CustomGeneric<FailsWithReturnedTypeBeingGenericOfSelfMock>  {
-        func _wrapped<__Self__>() -> __Self__ {
-		let method = MethodType.m_methodWillReturnSelfTypedCustom
-		let stringName = "methodWillReturnSelfTypedCustom()"
-		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWillReturnSelfTypedCustom) {
 			($0 as? () -> Void)?()
 		}
-		}
-		return _wrapped()
     }
 
     open func test(value: FailsWithReturnedTypeBeingGenericOfSelfMock) -> Bool {
-        let method = MethodType.m_test__value_value(Parameter<FailsWithReturnedTypeBeingGenericOfSelfMock>.value(`value`))
-		let stringName = "test(value: FailsWithReturnedTypeBeingGenericOfSelfMock)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_test__value_value(Parameter<FailsWithReturnedTypeBeingGenericOfSelfMock>.value(`value`))) {
 			($0 as? (FailsWithReturnedTypeBeingGenericOfSelfMock) -> Void)?(`value`)
 		}
     }
 
     open func insanetTest(value: CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>) -> Bool {
-        let method = MethodType.m_insanetTest__value_value(Parameter<CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>>.value(`value`))
-		let stringName = "insanetTest(value: CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_insanetTest__value_value(Parameter<CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>>.value(`value`))) {
 			($0 as? (CustomGeneric<[FailsWithReturnedTypeBeingGenericOfSelfMock]>) -> Void)?(`value`)
 		}
     }
@@ -2617,9 +2516,7 @@ open class FailsWithUntaggedMock: FailsWithUntagged, Mock {
     public required init<T>(with t: T) { }
 
     open func foo<T>(_: T, bar : String) where T: Sequence {
-        let method = MethodType.m_foo__barbar(Parameter<String>.value(`bar`))
-		let stringName = "foo<T>(_: T, bar : String)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_foo__barbar(Parameter<String>.value(`bar`))) {
 			($0 as? (String) -> Void)?(`bar`)
 		}
     }
@@ -2723,9 +2620,7 @@ open class GenericProtocolReturningIntMock: GenericProtocolReturningInt, Mock {
 
 
     open func value<T>(for value: T) -> Int {
-        let method = MethodType.m_value__for_value(Parameter<T>.value(`value`).wrapAsGeneric())
-		let stringName = "value<T>(for value: T)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_value__for_value(Parameter<T>.value(`value`).wrapAsGeneric())) {
 			($0 as? (T) -> Void)?(`value`)
 		}
     }
@@ -2839,17 +2734,13 @@ open class GenericProtocolWithTypeConstraintMock: GenericProtocolWithTypeConstra
 
 
     open func decode<T: Decodable>(_ type: T.Type, from data: Data) -> T {
-        let method = MethodType.m_decode__typefrom_data(Parameter<T.Type>.value(`type`).wrapAsGeneric(), Parameter<Data>.value(`data`))
-		let stringName = "decode<T: Decodable>(_ type: T.Type, from data: Data)"
-		return registry.invoke(method, of: (T).self, named: stringName) {
+        return registry.invoke(MethodType.m_decode__typefrom_data(Parameter<T.Type>.value(`type`).wrapAsGeneric(), Parameter<Data>.value(`data`))) {
 			($0 as? (T.Type, Data) -> Void)?(`type`, `data`)
 		}
     }
 
     open func test<FOO>(_ type: FOO.Type) -> Int {
-        let method = MethodType.m_test__type(Parameter<FOO.Type>.value(`type`).wrapAsGeneric())
-		let stringName = "test<FOO>(_ type: FOO.Type)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_test__type(Parameter<FOO.Type>.value(`type`).wrapAsGeneric())) {
 			($0 as? (FOO.Type) -> Void)?(`type`)
 		}
     }
@@ -2984,9 +2875,7 @@ open class HistorySectionMapperTypeMock: HistorySectionMapperType, Mock {
 
 
     open func map<T: DateSortable>(_ items: [T]) -> [(key: String, items: [T])] {
-        let method = MethodType.m_map__items(Parameter<[T]>.value(`items`).wrapAsGeneric())
-		let stringName = "map<T: DateSortable>(_ items: [T])"
-		return registry.invoke(method, of: ([(key: String, items: [T])]).self, named: stringName) {
+        return registry.invoke(MethodType.m_map__items(Parameter<[T]>.value(`items`).wrapAsGeneric())) {
 			($0 as? ([T]) -> Void)?(`items`)
 		}
     }
@@ -3100,17 +2989,13 @@ open class InoutProtocolMock: InoutProtocol, Mock {
 
 
     open func passThisAsInOut(value: inout URLRequest) {
-        let method = MethodType.m_passThisAsInOut__value_value(Parameter<URLRequest>.value(`value`))
-		let stringName = "passThisAsInOut(value: inout URLRequest)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_passThisAsInOut__value_value(Parameter<URLRequest>.value(`value`))) {
 			($0 as? (inout URLRequest) -> Void)?(&`value`)
 		}
     }
 
     open func returnAndInOut(value: inout Int) -> String {
-        let method = MethodType.m_returnAndInOut__value_value(Parameter<Int>.value(`value`))
-		let stringName = "returnAndInOut(value: inout Int)"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_returnAndInOut__value_value(Parameter<Int>.value(`value`))) {
 			($0 as? (inout Int) -> Void)?(&`value`)
 		}
     }
@@ -3235,17 +3120,13 @@ open class NonSwiftProtocolMock: NSObject, NonSwiftProtocol, Mock {
 
 
     open func returnNoting() {
-        let method = MethodType.m_returnNoting
-		let stringName = "returnNoting()"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_returnNoting) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func someMethod() {
-        let method = MethodType.m_someMethod
-		let stringName = "someMethod()"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_someMethod) {
 			($0 as? () -> Void)?()
 		}
     }
@@ -3357,73 +3238,55 @@ open class ProtocolMethodsGenericThatDifferOnlyInReturnTypeMock: ProtocolMethods
 
 
     open func foo<T>(bar: T) -> String {
-        let method = MethodType.m_foo__bar_bar_1(Parameter<T>.value(`bar`).wrapAsGeneric())
-		let stringName = "foo<T>(bar: T)"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_1(Parameter<T>.value(`bar`).wrapAsGeneric())) {
 			($0 as? (T) -> Void)?(`bar`)
 		}
     }
 
     open func foo<T>(bar: T) -> Int {
-        let method = MethodType.m_foo__bar_bar_2(Parameter<T>.value(`bar`).wrapAsGeneric())
-		let stringName = "foo<T>(bar: T)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_2(Parameter<T>.value(`bar`).wrapAsGeneric())) {
 			($0 as? (T) -> Void)?(`bar`)
 		}
     }
 
     open func foo<T>(bar: T) -> Float where T: A {
-        let method = MethodType.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())
-		let stringName = "foo<T>(bar: T)"
-		return registry.invoke(method, of: (Float).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())) {
 			($0 as? (T) -> Void)?(`bar`)
 		}
     }
 
     open func foo<T>(bar: T) -> Float where T: B {
-        let method = MethodType.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())
-		let stringName = "foo<T>(bar: T)"
-		return registry.invoke(method, of: (Float).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_4(Parameter<T>.value(`bar`).wrapAsGeneric())) {
 			($0 as? (T) -> Void)?(`bar`)
 		}
     }
 
     open func foo<T>(bar: T) -> Double where T: B {
-        let method = MethodType.m_foo__bar_bar_5(Parameter<T>.value(`bar`).wrapAsGeneric())
-		let stringName = "foo<T>(bar: T)"
-		return registry.invoke(method, of: (Double).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_5(Parameter<T>.value(`bar`).wrapAsGeneric())) {
 			($0 as? (T) -> Void)?(`bar`)
 		}
     }
 
     open func foo<T>(bar: String) -> Array<T> {
-        let method = MethodType.m_foo__bar_bar_6(Parameter<String>.value(`bar`))
-		let stringName = "foo<T>(bar: String)"
-		return registry.invoke(method, of: (Array<T>).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_6(Parameter<String>.value(`bar`))) {
 			($0 as? (String) -> Void)?(`bar`)
 		}
     }
 
     open func foo<T>(bar: String) -> Set<T> {
-        let method = MethodType.m_foo__bar_bar_7(Parameter<String>.value(`bar`))
-		let stringName = "foo<T>(bar: String)"
-		return registry.invoke(method, of: (Set<T>).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_7(Parameter<String>.value(`bar`))) {
 			($0 as? (String) -> Void)?(`bar`)
 		}
     }
 
     open func foo<T>(bar: Bool) -> T where T: A {
-        let method = MethodType.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))
-		let stringName = "foo<T>(bar: Bool)"
-		return registry.invoke(method, of: (T).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))) {
 			($0 as? (Bool) -> Void)?(`bar`)
 		}
     }
 
     open func foo<T>(bar: Bool) -> T where T: B {
-        let method = MethodType.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))
-		let stringName = "foo<T>(bar: Bool)"
-		return registry.invoke(method, of: (T).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_9(Parameter<Bool>.value(`bar`))) {
 			($0 as? (Bool) -> Void)?(`bar`)
 		}
     }
@@ -3652,17 +3515,13 @@ open class ProtocolMethodsThatDifferOnlyInReturnTypeMock: ProtocolMethodsThatDif
 
 
     open func foo(bar: String) -> String {
-        let method = MethodType.m_foo__bar_bar_1(Parameter<String>.value(`bar`))
-		let stringName = "foo(bar: String)"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_1(Parameter<String>.value(`bar`))) {
 			($0 as? (String) -> Void)?(`bar`)
 		}
     }
 
     open func foo(bar: String) -> Int {
-        let method = MethodType.m_foo__bar_bar_2(Parameter<String>.value(`bar`))
-		let stringName = "foo(bar: String)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_foo__bar_bar_2(Parameter<String>.value(`bar`))) {
 			($0 as? (String) -> Void)?(`bar`)
 		}
     }
@@ -3803,9 +3662,7 @@ open class ProtocolWithAssociatedTypeMock<T>: ProtocolWithAssociatedType, Mock w
 
 
     open func methodWithType(t: T) -> Bool {
-        let method = MethodType.m_methodWithType__t_t(Parameter<T>.value(`t`))
-		let stringName = "methodWithType(t: T)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithType__t_t(Parameter<T>.value(`t`))) {
 			($0 as? (T) -> Void)?(`t`)
 		}
     }
@@ -4030,25 +3887,19 @@ open class ProtocolWithClosuresMock: ProtocolWithClosures, Mock {
 
 
     open func methodThatTakes(closure: (Int) -> Int) {
-        let method = MethodType.m_methodThatTakes__closure_closure(Parameter<(Int) -> Int>.any)
-		let stringName = "methodThatTakes(closure: (Int) -> Int)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_methodThatTakes__closure_closure(Parameter<(Int) -> Int>.any)) {
 			($0 as? ((Int) -> Int) -> Void)?(`closure`)
 		}
     }
 
     open func methodThatTakesEscaping(closure: @escaping (Int) -> Int) {
-        let method = MethodType.m_methodThatTakesEscaping__closure_closure(Parameter<(Int) -> Int>.value(`closure`))
-		let stringName = "methodThatTakesEscaping(closure: @escaping (Int) -> Int)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_methodThatTakesEscaping__closure_closure(Parameter<(Int) -> Int>.value(`closure`))) {
 			($0 as? (@escaping (Int) -> Int) -> Void)?(`closure`)
 		}
     }
 
     open func methodThatTakesCompletionBlock(completion: (Bool,Error?) -> Void) {
-        let method = MethodType.m_methodThatTakesCompletionBlock__completion_completion(Parameter<(Bool,Error?) -> Void>.any)
-		let stringName = "methodThatTakesCompletionBlock(completion: (Bool,Error?) -> Void)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_methodThatTakesCompletionBlock__completion_completion(Parameter<(Bool,Error?) -> Void>.any)) {
 			($0 as? ((Bool,Error?) -> Void) -> Void)?(`completion`)
 		}
     }
@@ -4171,25 +4022,19 @@ open class ProtocolWithConflictingMembersMock: ProtocolWithConflictingMembers, M
 
 
     open func method(withLabel value: Int) -> Bool {
-        let method = MethodType.m_method__withLabel_value(Parameter<Int>.value(`value`))
-		let stringName = "method(withLabel value: Int)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_method__withLabel_value(Parameter<Int>.value(`value`))) {
 			($0 as? (Int) -> Void)?(`value`)
 		}
     }
 
     open func method(_ value: Int) -> Bool {
-        let method = MethodType.m_method__value(Parameter<Int>.value(`value`))
-		let stringName = "method(_ value: Int)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_method__value(Parameter<Int>.value(`value`))) {
 			($0 as? (Int) -> Void)?(`value`)
 		}
     }
 
     open func method(value: Int) -> Bool {
-        let method = MethodType.m_method__value_value(Parameter<Int>.value(`value`))
-		let stringName = "method(value: Int)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_method__value_value(Parameter<Int>.value(`value`))) {
 			($0 as? (Int) -> Void)?(`value`)
 		}
     }
@@ -4342,17 +4187,13 @@ open class ProtocolWithCustomAttributesMock: ProtocolWithCustomAttributes, Mock 
 
 
     open func methodThatTakesUser(user: UserObject) throws {
-        let method = MethodType.m_methodThatTakesUser__user_user(Parameter<UserObject>.value(`user`))
-		let stringName = "methodThatTakesUser(user: UserObject)"
-		return try registry.invokeThrowing(method, named: stringName) {
+        return try registry.invokeThrowing(MethodType.m_methodThatTakesUser__user_user(Parameter<UserObject>.value(`user`))) {
 			($0 as? (UserObject) -> Void)?(`user`)
 		}
     }
 
     open func methodThatTakesArrayOfUsers(array: [UserObject]) -> Int {
-        let method = MethodType.m_methodThatTakesArrayOfUsers__array_array(Parameter<[UserObject]>.value(`array`))
-		let stringName = "methodThatTakesArrayOfUsers(array: [UserObject])"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodThatTakesArrayOfUsers__array_array(Parameter<[UserObject]>.value(`array`))) {
 			($0 as? ([UserObject]) -> Void)?(`array`)
 		}
     }
@@ -4486,9 +4327,7 @@ open class ProtocolWithDeprecatedMembersMock: ProtocolWithDeprecatedMembers, Moc
 
 
     open func method(_ value: Int) -> Bool {
-        let method = MethodType.m_method__value(Parameter<Int>.value(`value`))
-		let stringName = "method(_ value: Int)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_method__value(Parameter<Int>.value(`value`))) {
 			($0 as? (Int) -> Void)?(`value`)
 		}
     }
@@ -4609,9 +4448,7 @@ open class ProtocolWithGenericConstraintsMock<ContainedType>: ProtocolWithGeneri
 
 
     open func extractString<U: CustomStringConvertible>() -> String? where ContainedType == Optional<U> {
-        let method = MethodType.m_extractString
-		let stringName = "extractString<U: CustomStringConvertible>()"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_extractString) {
 			($0 as? () -> Void)?()
 		}
     }
@@ -4732,17 +4569,13 @@ open class ProtocolWithGenericMethodsMock: ProtocolWithGenericMethods, Mock {
 
 
     open func methodWithGeneric<T>(lhs: T, rhs: T) -> Bool {
-        let method = MethodType.m_methodWithGeneric__lhs_lhsrhs_rhs(Parameter<T>.value(`lhs`).wrapAsGeneric(), Parameter<T>.value(`rhs`).wrapAsGeneric())
-		let stringName = "methodWithGeneric<T>(lhs: T, rhs: T)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithGeneric__lhs_lhsrhs_rhs(Parameter<T>.value(`lhs`).wrapAsGeneric(), Parameter<T>.value(`rhs`).wrapAsGeneric())) {
 			($0 as? (T, T) -> Void)?(`lhs`, `rhs`)
 		}
     }
 
     open func methodWithGenericConstraint<U>(param: [U]) -> U where U: Equatable {
-        let method = MethodType.m_methodWithGenericConstraint__param_param(Parameter<[U]>.value(`param`).wrapAsGeneric())
-		let stringName = "methodWithGenericConstraint<U>(param: [U])"
-		return registry.invoke(method, of: (U).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithGenericConstraint__param_param(Parameter<[U]>.value(`param`).wrapAsGeneric())) {
 			($0 as? ([U]) -> Void)?(`param`)
 		}
     }
@@ -4877,9 +4710,7 @@ open class ProtocolWithGenericMethodsNestedMock: ProtocolWithGenericMethodsNeste
 
 
     open func methodWithGeneric<T>(resource: Resource<T>) -> Observable<Response<T>> {
-        let method = MethodType.m_methodWithGeneric__resource_resource(Parameter<Resource<T>>.value(`resource`).wrapAsGeneric())
-		let stringName = "methodWithGeneric<T>(resource: Resource<T>)"
-		return registry.invoke(method, of: (Observable<Response<T>>).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithGeneric__resource_resource(Parameter<Resource<T>>.value(`resource`).wrapAsGeneric())) {
 			($0 as? (Resource<T>) -> Void)?(`resource`)
 		}
     }
@@ -5161,25 +4992,19 @@ open class ProtocolWithPropoertiesMock: ProtocolWithPropoerties, Mock, StaticMoc
 
 
     public static func defaultEmail(_ newValue: String!) {
-        let method = StaticMethodType.sm_defaultEmail__newValue(Parameter<String?>.value(`newValue`))
-		let stringName = "defaultEmail(_ newValue: String!)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(StaticMethodType.sm_defaultEmail__newValue(Parameter<String?>.value(`newValue`))) {
 			($0 as? (String?) -> Void)?(`newValue`)
 		}
     }
 
     open func name(_ newValue: String) {
-        let method = MethodType.m_name__newValue(Parameter<String>.value(`newValue`))
-		let stringName = "name(_ newValue: String)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_name__newValue(Parameter<String>.value(`newValue`))) {
 			($0 as? (String) -> Void)?(`newValue`)
 		}
     }
 
     open func email(_ newValue: String!) {
-        let method = MethodType.m_email__newValue(Parameter<String?>.value(`newValue`))
-		let stringName = "email(_ newValue: String!)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_email__newValue(Parameter<String?>.value(`newValue`))) {
 			($0 as? (String?) -> Void)?(`newValue`)
 		}
     }
@@ -5423,9 +5248,7 @@ open class ProtocolWithStaticMembersMock: ProtocolWithStaticMembers, Mock, Stati
 
 
     public static func staticMethod(param: Int) throws -> Int {
-        let method = StaticMethodType.sm_staticMethod__param_param(Parameter<Int>.value(`param`))
-		let stringName = "staticMethod(param: Int)"
-		return try registry.invokeThrowing(method, of: (Int).self, named: stringName) {
+        return try registry.invokeThrowing(StaticMethodType.sm_staticMethod__param_param(Parameter<Int>.value(`param`))) {
 			($0 as? (Int) -> Void)?(`param`)
 		}
     }
@@ -5595,9 +5418,7 @@ open class ProtocolWithSubscriptsMock: ProtocolWithSubscripts, Mock {
 
 
     open func aaa(_ value: Int) -> Bool {
-        let method = MethodType.m_aaa__value(Parameter<Int>.value(`value`))
-		let stringName = "aaa(_ value: Int)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_aaa__value(Parameter<Int>.value(`value`))) {
 			($0 as? (Int) -> Void)?(`value`)
 		}
     }
@@ -6066,17 +5887,13 @@ open class ProtocolWithThrowingMethodsMock: ProtocolWithThrowingMethods, Mock {
 
 
     open func methodThatThrows() throws {
-        let method = MethodType.m_methodThatThrows
-		let stringName = "methodThatThrows()"
-		return try registry.invokeThrowing(method, named: stringName) {
+        return try registry.invokeThrowing(MethodType.m_methodThatThrows) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func methodThatReturnsAndThrows(param: Int) throws -> Bool {
-        let method = MethodType.m_methodThatReturnsAndThrows__param_param(Parameter<Int>.value(`param`))
-		let stringName = "methodThatReturnsAndThrows(param: Int)"
-		return try registry.invokeThrowing(method, of: (Bool).self, named: stringName) {
+        return try registry.invokeThrowing(MethodType.m_methodThatReturnsAndThrows__param_param(Parameter<Int>.value(`param`))) {
 			($0 as? (Int) -> Void)?(`param`)
 		}
     }
@@ -6212,9 +6029,7 @@ open class ProtocolWithTuplesMock: ProtocolWithTuples, Mock {
 
 
     open func methodThatTakesTuple(tuple: (String,Int)) -> Int {
-        let method = MethodType.m_methodThatTakesTuple__tuple_tuple(Parameter<(String,Int)>.value(`tuple`))
-		let stringName = "methodThatTakesTuple(tuple: (String,Int))"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodThatTakesTuple__tuple_tuple(Parameter<(String,Int)>.value(`tuple`))) {
 			($0 as? ((String,Int)) -> Void)?(`tuple`)
 		}
     }
@@ -6335,9 +6150,7 @@ open class ProtocolWithWhereAfterDefinitionMock<T>: ProtocolWithWhereAfterDefini
 
 
     open func methodWithType(t: T) -> Bool {
-        let method = MethodType.m_methodWithType__t_t(Parameter<T>.value(`t`))
-		let stringName = "methodWithType(t: T)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithType__t_t(Parameter<T>.value(`t`))) {
 			($0 as? (T) -> Void)?(`t`)
 		}
     }
@@ -6459,65 +6272,49 @@ open class SampleServiceTypeMock: SampleServiceType, Mock {
 
 
     open func serviceName() -> String {
-        let method = MethodType.m_serviceName
-		let stringName = "serviceName()"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_serviceName) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func getPoint(from point: Point) -> Point {
-        let method = MethodType.m_getPoint__from_point(Parameter<Point>.value(`point`))
-		let stringName = "getPoint(from point: Point)"
-		return registry.invoke(method, of: (Point).self, named: stringName) {
+        return registry.invoke(MethodType.m_getPoint__from_point(Parameter<Point>.value(`point`))) {
 			($0 as? (Point) -> Void)?(`point`)
 		}
     }
 
     open func getPoint(from tuple: (Float,Float)) -> Point {
-        let method = MethodType.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))
-		let stringName = "getPoint(from tuple: (Float,Float))"
-		return registry.invoke(method, of: (Point).self, named: stringName) {
+        return registry.invoke(MethodType.m_getPoint__from_tuple(Parameter<(Float,Float)>.value(`tuple`))) {
 			($0 as? ((Float,Float)) -> Void)?(`tuple`)
 		}
     }
 
     open func similarMethodThatDiffersOnType(_ value: Float) -> Bool {
-        let method = MethodType.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))
-		let stringName = "similarMethodThatDiffersOnType(_ value: Float)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_similarMethodThatDiffersOnType__value_1(Parameter<Float>.value(`value`))) {
 			($0 as? (Float) -> Void)?(`value`)
 		}
     }
 
     open func similarMethodThatDiffersOnType(_ value: Point) -> Bool {
-        let method = MethodType.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))
-		let stringName = "similarMethodThatDiffersOnType(_ value: Point)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_similarMethodThatDiffersOnType__value_2(Parameter<Point>.value(`value`))) {
 			($0 as? (Point) -> Void)?(`value`)
 		}
     }
 
     open func methodWithTypedef(_ scalar: Scalar) {
-        let method = MethodType.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`))
-		let stringName = "methodWithTypedef(_ scalar: Scalar)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithTypedef__scalar(Parameter<Scalar>.value(`scalar`))) {
 			($0 as? (Scalar) -> Void)?(`scalar`)
 		}
     }
 
     open func methodWithClosures(success function: LinearFunction) -> ClosureFabric {
-        let method = MethodType.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))
-		let stringName = "methodWithClosures(success function: LinearFunction)"
-		return registry.invoke(method, of: (ClosureFabric).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithClosures__success_function_1(Parameter<LinearFunction>.value(`function`))) {
 			($0 as? (LinearFunction) -> Void)?(`function`)
 		}
     }
 
     open func methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?) -> ((Int) -> Void) {
-        let method = MethodType.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))
-		let stringName = "methodWithClosures(success function: ((Scalar,Scalar) -> Scalar)?)"
-		return registry.invoke(method, of: ((Int) -> Void).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodWithClosures__success_function_2(Parameter<((Scalar,Scalar) -> Scalar)?>.value(`function`))) {
 			($0 as? (((Scalar,Scalar) -> Scalar)?) -> Void)?(`function`)
 		}
     }
@@ -6776,55 +6573,33 @@ open class SelfConstrainedProtocolMock: SelfConstrainedProtocol, Mock, StaticMoc
 
 
     public static func construct(param value: Int) -> Self {
-        func _wrapped<__Self__>() -> __Self__ {
-		let method = StaticMethodType.sm_construct__param_value(Parameter<Int>.value(`value`))
-		let stringName = "construct(param value: Int)"
-		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+        return registry.invoke(StaticMethodType.sm_construct__param_value(Parameter<Int>.value(`value`))) {
 			($0 as? (Int) -> Void)?(`value`)
 		}
-		}
-		return _wrapped()
     }
 
     open func methodReturningSelf() -> Self {
-        func _wrapped<__Self__>() -> __Self__ {
-		let method = MethodType.m_methodReturningSelf
-		let stringName = "methodReturningSelf()"
-		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+        return registry.invoke(MethodType.m_methodReturningSelf) {
 			($0 as? () -> Void)?()
 		}
-		}
-		return _wrapped()
     }
 
     open func compare(with other: SelfConstrainedProtocolMock) -> Bool {
-        let method = MethodType.m_compare__with_other(Parameter<SelfConstrainedProtocolMock>.value(`other`))
-		let stringName = "compare(with other: SelfConstrainedProtocolMock)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_compare__with_other(Parameter<SelfConstrainedProtocolMock>.value(`other`))) {
 			($0 as? (SelfConstrainedProtocolMock) -> Void)?(`other`)
 		}
     }
 
     open func genericMethodWithNestedSelf<T>(param: Int, second: T, other: (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)) -> Self {
-        func _wrapped<__Self__>() -> __Self__ {
-		let method = MethodType.m_genericMethodWithNestedSelf__param_paramsecond_secondother_other(Parameter<Int>.value(`param`), Parameter<T>.value(`second`).wrapAsGeneric(), Parameter<(SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)>.value(`other`))
-		let stringName = "genericMethodWithNestedSelf<T>(param: Int, second: T, other: (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock))"
-		return registry.invoke(method, of: (__Self__).self, named: stringName) {
+        return registry.invoke(MethodType.m_genericMethodWithNestedSelf__param_paramsecond_secondother_other(Parameter<Int>.value(`param`), Parameter<T>.value(`second`).wrapAsGeneric(), Parameter<(SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)>.value(`other`))) {
 			($0 as? (Int, T, (SelfConstrainedProtocolMock,SelfConstrainedProtocolMock)) -> Void)?(`param`, `second`, `other`)
 		}
-		}
-		return _wrapped()
     }
 
     open func configure(with secret: String) throws -> Self {
-        func _wrapped<__Self__>() throws -> __Self__ {
-		let method = MethodType.m_configure__with_secret(Parameter<String>.value(`secret`))
-		let stringName = "configure(with secret: String)"
-		return try registry.invokeThrowing(method, of: (__Self__).self, named: stringName) {
+        return try registry.invokeThrowing(MethodType.m_configure__with_secret(Parameter<String>.value(`secret`))) {
 			($0 as? (String) -> Void)?(`secret`)
 		}
-		}
-		return try _wrapped()
     }
 
     public enum StaticMethodType: MethodTypeProtocol {
@@ -7100,65 +6875,49 @@ open class ShouldAllowNoStubDefinedMock: ShouldAllowNoStubDefined, Mock, StaticM
 
 
     public static func voidMethod(_ key: String) {
-        let method = StaticMethodType.sm_voidMethod__key(Parameter<String>.value(`key`))
-		let stringName = "voidMethod(_ key: String)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(StaticMethodType.sm_voidMethod__key(Parameter<String>.value(`key`))) {
 			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     public static func throwingVoidMethod(_ key: String) throws {
-        let method = StaticMethodType.sm_throwingVoidMethod__key(Parameter<String>.value(`key`))
-		let stringName = "throwingVoidMethod(_ key: String)"
-		return try registry.invokeThrowing(method, named: stringName) {
+        return try registry.invokeThrowing(StaticMethodType.sm_throwingVoidMethod__key(Parameter<String>.value(`key`))) {
 			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     public static func optionalMethod(_ key: String) -> Int? {
-        let method = StaticMethodType.sm_optionalMethod__key(Parameter<String>.value(`key`))
-		let stringName = "optionalMethod(_ key: String)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(StaticMethodType.sm_optionalMethod__key(Parameter<String>.value(`key`))) {
 			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     public static func optionalThrowingMethod(_ key: String) -> Int? {
-        let method = StaticMethodType.sm_optionalThrowingMethod__key(Parameter<String>.value(`key`))
-		let stringName = "optionalThrowingMethod(_ key: String)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(StaticMethodType.sm_optionalThrowingMethod__key(Parameter<String>.value(`key`))) {
 			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     open func voidMethod(_ key: String) {
-        let method = MethodType.m_voidMethod__key(Parameter<String>.value(`key`))
-		let stringName = "voidMethod(_ key: String)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_voidMethod__key(Parameter<String>.value(`key`))) {
 			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     open func throwingVoidMethod(_ key: String) throws {
-        let method = MethodType.m_throwingVoidMethod__key(Parameter<String>.value(`key`))
-		let stringName = "throwingVoidMethod(_ key: String)"
-		return try registry.invokeThrowing(method, named: stringName) {
+        return try registry.invokeThrowing(MethodType.m_throwingVoidMethod__key(Parameter<String>.value(`key`))) {
 			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     open func optionalMethod(_ key: String) -> Int? {
-        let method = MethodType.m_optionalMethod__key(Parameter<String>.value(`key`))
-		let stringName = "optionalMethod(_ key: String)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_optionalMethod__key(Parameter<String>.value(`key`))) {
 			($0 as? (String) -> Void)?(`key`)
 		}
     }
 
     open func optionalThrowingMethod(_ key: String) -> Int? {
-        let method = MethodType.m_optionalThrowingMethod__key(Parameter<String>.value(`key`))
-		let stringName = "optionalThrowingMethod(_ key: String)"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_optionalThrowingMethod__key(Parameter<String>.value(`key`))) {
 			($0 as? (String) -> Void)?(`key`)
 		}
     }
@@ -7499,33 +7258,25 @@ open class SimpleProtocolThatInheritsOtherProtocolsMock: SimpleProtocolThatInher
 
 
     open func simpleMethod() {
-        let method = MethodType.m_simpleMethod
-		let stringName = "simpleMethod()"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMethod) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func simpleMehtodThatReturns() -> Int {
-        let method = MethodType.m_simpleMehtodThatReturns
-		let stringName = "simpleMehtodThatReturns()"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMehtodThatReturns) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func simpleMehtodThatReturns(param: String) -> String {
-        let method = MethodType.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))
-		let stringName = "simpleMehtodThatReturns(param: String)"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))) {
 			($0 as? (String) -> Void)?(`param`)
 		}
     }
 
     open func simpleMehtodThatReturns(optionalParam: String?) -> String? {
-        let method = MethodType.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))
-		let stringName = "simpleMehtodThatReturns(optionalParam: String?)"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))) {
 			($0 as? (String?) -> Void)?(`optionalParam`)
 		}
     }
@@ -7736,33 +7487,25 @@ open class SimpleProtocolUsingCollectionsMock: SimpleProtocolUsingCollections, M
 
 
     open func getArray() -> [Int] {
-        let method = MethodType.m_getArray
-		let stringName = "getArray()"
-		return registry.invoke(method, of: ([Int]).self, named: stringName) {
+        return registry.invoke(MethodType.m_getArray) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func map(array: [String], param: Int) -> [Int: String] {
-        let method = MethodType.m_map__array_arrayparam_param(Parameter<[String]>.value(`array`), Parameter<Int>.value(`param`))
-		let stringName = "map(array: [String], param: Int)"
-		return registry.invoke(method, of: ([Int: String]).self, named: stringName) {
+        return registry.invoke(MethodType.m_map__array_arrayparam_param(Parameter<[String]>.value(`array`), Parameter<Int>.value(`param`))) {
 			($0 as? ([String], Int) -> Void)?(`array`, `param`)
 		}
     }
 
     open func use(dictionary: [Int: String]) -> [Int: String] {
-        let method = MethodType.m_use__dictionary_dictionary(Parameter<[Int: String]>.value(`dictionary`))
-		let stringName = "use(dictionary: [Int: String])"
-		return registry.invoke(method, of: ([Int: String]).self, named: stringName) {
+        return registry.invoke(MethodType.m_use__dictionary_dictionary(Parameter<[Int: String]>.value(`dictionary`))) {
 			($0 as? ([Int: String]) -> Void)?(`dictionary`)
 		}
     }
 
     open func verify(set: Set<Int>) -> Bool {
-        let method = MethodType.m_verify__set_set(Parameter<Set<Int>>.value(`set`))
-		let stringName = "verify(set: Set<Int>)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_verify__set_set(Parameter<Set<Int>>.value(`set`))) {
 			($0 as? (Set<Int>) -> Void)?(`set`)
 		}
     }
@@ -7941,9 +7684,7 @@ open class SimpleProtocolWithBothMethodsAndPropertiesMock: SimpleProtocolWithBot
 
 
     open func simpleMethod() -> String {
-        let method = MethodType.m_simpleMethod
-		let stringName = "simpleMethod()"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMethod) {
 			($0 as? () -> Void)?()
 		}
     }
@@ -8064,33 +7805,25 @@ open class SimpleProtocolWithMethodsMock: SimpleProtocolWithMethods, Mock {
 
 
     open func simpleMethod() {
-        let method = MethodType.m_simpleMethod
-		let stringName = "simpleMethod()"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMethod) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func simpleMehtodThatReturns() -> Int {
-        let method = MethodType.m_simpleMehtodThatReturns
-		let stringName = "simpleMehtodThatReturns()"
-		return registry.invoke(method, of: (Int).self, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMehtodThatReturns) {
 			($0 as? () -> Void)?()
 		}
     }
 
     open func simpleMehtodThatReturns(param: String) -> String {
-        let method = MethodType.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))
-		let stringName = "simpleMehtodThatReturns(param: String)"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMehtodThatReturns__param_param(Parameter<String>.value(`param`))) {
 			($0 as? (String) -> Void)?(`param`)
 		}
     }
 
     open func simpleMehtodThatReturns(optionalParam: String?) -> String? {
-        let method = MethodType.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))
-		let stringName = "simpleMehtodThatReturns(optionalParam: String?)"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_simpleMehtodThatReturns__optionalParam_optionalParam(Parameter<String?>.value(`optionalParam`))) {
 			($0 as? (String?) -> Void)?(`optionalParam`)
 		}
     }
@@ -8504,49 +8237,37 @@ open class SuggestionRepositoryMock: SuggestionRepository, Mock {
 
 
     open func save(entity: Entity) -> Bool {
-        let method = MethodType.m_save__entity_entity(Parameter<Entity>.value(`entity`))
-		let stringName = "save(entity: Entity)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_save__entity_entity(Parameter<Entity>.value(`entity`))) {
 			($0 as? (Entity) -> Void)?(`entity`)
 		}
     }
 
     open func save(entities: [Entity]) -> Bool {
-        let method = MethodType.m_save__entities_entities(Parameter<[Entity]>.value(`entities`))
-		let stringName = "save(entities: [Entity])"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_save__entities_entities(Parameter<[Entity]>.value(`entities`))) {
 			($0 as? ([Entity]) -> Void)?(`entities`)
 		}
     }
 
     open func find(    where predicate: NSPredicate,    sortedBy sortDescriptors: [NSSortDescriptor]) -> [Entity] {
-        let method = MethodType.m_find__where_predicatesortedBy_sortDescriptors(Parameter<NSPredicate>.value(`predicate`), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`))
-		let stringName = "find(    where predicate: NSPredicate,    sortedBy sortDescriptors: [NSSortDescriptor])"
-		return registry.invoke(method, of: ([Entity]).self, named: stringName) {
+        return registry.invoke(MethodType.m_find__where_predicatesortedBy_sortDescriptors(Parameter<NSPredicate>.value(`predicate`), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`))) {
 			($0 as? (NSPredicate, [NSSortDescriptor]) -> Void)?(`predicate`, `sortDescriptors`)
 		}
     }
 
     open func findOne(where predicate: NSPredicate) -> Entity {
-        let method = MethodType.m_findOne__where_predicate(Parameter<NSPredicate>.value(`predicate`))
-		let stringName = "findOne(where predicate: NSPredicate)"
-		return registry.invoke(method, of: (Entity).self, named: stringName) {
+        return registry.invoke(MethodType.m_findOne__where_predicate(Parameter<NSPredicate>.value(`predicate`))) {
 			($0 as? (NSPredicate) -> Void)?(`predicate`)
 		}
     }
 
     open func delete(entity: Entity) -> Bool {
-        let method = MethodType.m_delete__entity_entity(Parameter<Entity>.value(`entity`))
-		let stringName = "delete(entity: Entity)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_delete__entity_entity(Parameter<Entity>.value(`entity`))) {
 			($0 as? (Entity) -> Void)?(`entity`)
 		}
     }
 
     open func delete(entities: [Entity]) -> Bool {
-        let method = MethodType.m_delete__entities_entities(Parameter<[Entity]>.value(`entities`))
-		let stringName = "delete(entities: [Entity])"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_delete__entities_entities(Parameter<[Entity]>.value(`entities`))) {
 			($0 as? ([Entity]) -> Void)?(`entities`)
 		}
     }
@@ -8757,49 +8478,37 @@ open class SuggestionRepositoryConstrainedToProtocolMock<Entity>: SuggestionRepo
 
 
     open func save(entity: Entity) -> Bool {
-        let method = MethodType.m_save__entity_entity(Parameter<Entity>.value(`entity`))
-		let stringName = "save(entity: Entity)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_save__entity_entity(Parameter<Entity>.value(`entity`))) {
 			($0 as? (Entity) -> Void)?(`entity`)
 		}
     }
 
     open func save(entities: [Entity]) -> Bool {
-        let method = MethodType.m_save__entities_entities(Parameter<[Entity]>.value(`entities`))
-		let stringName = "save(entities: [Entity])"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_save__entities_entities(Parameter<[Entity]>.value(`entities`))) {
 			($0 as? ([Entity]) -> Void)?(`entities`)
 		}
     }
 
     open func find(    where predicate: NSPredicate,    sortedBy sortDescriptors: [NSSortDescriptor]) -> [Entity] {
-        let method = MethodType.m_find__where_predicatesortedBy_sortDescriptors(Parameter<NSPredicate>.value(`predicate`), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`))
-		let stringName = "find(    where predicate: NSPredicate,    sortedBy sortDescriptors: [NSSortDescriptor])"
-		return registry.invoke(method, of: ([Entity]).self, named: stringName) {
+        return registry.invoke(MethodType.m_find__where_predicatesortedBy_sortDescriptors(Parameter<NSPredicate>.value(`predicate`), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`))) {
 			($0 as? (NSPredicate, [NSSortDescriptor]) -> Void)?(`predicate`, `sortDescriptors`)
 		}
     }
 
     open func findOne(where predicate: NSPredicate) -> Entity {
-        let method = MethodType.m_findOne__where_predicate(Parameter<NSPredicate>.value(`predicate`))
-		let stringName = "findOne(where predicate: NSPredicate)"
-		return registry.invoke(method, of: (Entity).self, named: stringName) {
+        return registry.invoke(MethodType.m_findOne__where_predicate(Parameter<NSPredicate>.value(`predicate`))) {
 			($0 as? (NSPredicate) -> Void)?(`predicate`)
 		}
     }
 
     open func delete(entity: Entity) -> Bool {
-        let method = MethodType.m_delete__entity_entity(Parameter<Entity>.value(`entity`))
-		let stringName = "delete(entity: Entity)"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_delete__entity_entity(Parameter<Entity>.value(`entity`))) {
 			($0 as? (Entity) -> Void)?(`entity`)
 		}
     }
 
     open func delete(entities: [Entity]) -> Bool {
-        let method = MethodType.m_delete__entities_entities(Parameter<[Entity]>.value(`entities`))
-		let stringName = "delete(entities: [Entity])"
-		return registry.invoke(method, of: (Bool).self, named: stringName) {
+        return registry.invoke(MethodType.m_delete__entities_entities(Parameter<[Entity]>.value(`entities`))) {
 			($0 as? ([Entity]) -> Void)?(`entities`)
 		}
     }
@@ -9095,33 +8804,25 @@ open class UserNetworkTypeMock: UserNetworkType, Mock {
     public required init(baseUrl: String) { }
 
     open func getUser(for id: String, completion: (User?) -> Void) {
-        let method = MethodType.m_getUser__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?) -> Void>.any)
-		let stringName = "getUser(for id: String, completion: (User?) -> Void)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_getUser__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?) -> Void>.any)) {
 			($0 as? (String, (User?) -> Void) -> Void)?(`id`, `completion`)
 		}
     }
 
     open func getUserEscaping(for id: String, completion: @escaping (User?,Error?) -> Void) {
-        let method = MethodType.m_getUserEscaping__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?,Error?) -> Void>.value(`completion`))
-		let stringName = "getUserEscaping(for id: String, completion: @escaping (User?,Error?) -> Void)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_getUserEscaping__for_idcompletion_completion(Parameter<String>.value(`id`), Parameter<(User?,Error?) -> Void>.value(`completion`))) {
 			($0 as? (String, @escaping (User?,Error?) -> Void) -> Void)?(`id`, `completion`)
 		}
     }
 
     open func doSomething(prop: @autoclosure () -> String) {
-        let method = MethodType.m_doSomething__prop_prop(Parameter<() -> String>.any)
-		let stringName = "doSomething(prop: @autoclosure () -> String)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_doSomething__prop_prop(Parameter<() -> String>.any)) {
 			($0 as? (@autoclosure () -> String) -> Void)?(`prop`())
 		}
     }
 
     open func testDefaultValues(value: String) {
-        let method = MethodType.m_testDefaultValues__value_value(Parameter<String>.value(`value`))
-		let stringName = "testDefaultValues(value: String)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_testDefaultValues__value_value(Parameter<String>.value(`value`))) {
 			($0 as? (String) -> Void)?(`value`)
 		}
     }
@@ -9255,17 +8956,13 @@ open class UserStorageTypeMock: UserStorageType, Mock {
 
 
     open func surname(for name: String) -> String {
-        let method = MethodType.m_surname__for_name(Parameter<String>.value(`name`))
-		let stringName = "surname(for name: String)"
-		return registry.invoke(method, of: (String).self, named: stringName) {
+        return registry.invoke(MethodType.m_surname__for_name(Parameter<String>.value(`name`))) {
 			($0 as? (String) -> Void)?(`name`)
 		}
     }
 
     open func storeUser(name: String, surname: String) {
-        let method = MethodType.m_storeUser__name_namesurname_surname(Parameter<String>.value(`name`), Parameter<String>.value(`surname`))
-		let stringName = "storeUser(name: String, surname: String)"
-		return registry.invoke(method, named: stringName) {
+        return registry.invoke(MethodType.m_storeUser__name_namesurname_surname(Parameter<String>.value(`name`), Parameter<String>.value(`surname`))) {
 			($0 as? (String, String) -> Void)?(`name`, `surname`)
 		}
     }
